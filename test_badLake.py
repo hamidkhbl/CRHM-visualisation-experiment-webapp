@@ -49,6 +49,3 @@ print('Number of missmatches: {}'.format(len (df_diff[ (df_diff['SWE(1)_diff_gcc
                                                        ])))
 df_diff.to_csv('csv/diff.csv')
 # %%
-
-
-# %%

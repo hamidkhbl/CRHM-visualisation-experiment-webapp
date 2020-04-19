@@ -26,5 +26,5 @@ df['WS3_diff'] = abs(df_gcc['WS_outflow@F(3)'] - df_vcc['WS_outflow@F(3)'])
 df['WS4_diff'] = abs(df_gcc['WS_outflow@F(4)'] - df_vcc['WS_outflow@F(4)'])
 df['WS5_diff'] = abs(df_gcc['WS_outflow@F(5)'] - df_vcc['WS_outflow@F(5)'])
 
-df.to_csv('SmithCreek_full_diff.csv')
+df.to_csv('csv/SmithCreek_full_diff.csv')
 

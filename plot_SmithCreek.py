@@ -18,11 +18,12 @@ df['time'] = df['time'].apply(lambda x : rreplace(x, ' ',':',1))
 df['time'] = df['time'].apply(lambda x : rreplace(x, ' ','-',4))
 df['time'] = df['time'].apply(lambda x : rreplace(x, '-',' ',1))
 
+
 print(df.head())
 
 trace0 = go.Scatter(x=df['time'], 
                     y=df['WS_outflow@F(1)'], 
-                    mode='lines', 
+                    mode='lines',
                     name='WS_outflow@F(1)')
 
 trace1 = go.Scatter(x=df['time'], 
