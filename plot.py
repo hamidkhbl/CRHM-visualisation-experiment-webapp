@@ -12,8 +12,6 @@ obsFileName = sys.argv[1]
 if not os.path.exists('csv'):
     os.makedirs('csv')
 
-
-
 # covert obs to csv
 def convertToCsv(fileName):
     print(colored("Info",'green'),": converting obs to csv...")
@@ -40,15 +38,23 @@ body = body.split("\n",headerCount)[headerCount]
 bodyList = body.split('\n')
 # convert body to dataframe
 
-obsColumns = ['time'] + obsColumns
+obsColumnsTm = ['time'] + obsColumns
 
-print(obsColumns)
-df = pd.DataFrame([x.split('\t') for x in bodyList], columns = obsColumns)
+df = pd.DataFrame([x.split('\t') for x in bodyList], columns = obsColumnsTm)
 
-print(df.head())
+df.to_csv('test.csv')
 
-# remove header
-
+data = []
+for x in obsColumns:
+    trace = go.Scatter(x=df['time'], 
+                        y=df[x], 
+                        mode='lines',
+                        name=x)
+    data.append(trace)
+print(colored('Info','green')," Generating plot for {}...".format(obsFileName))
+layout = go.Layout(title=obsFileName)
+fig = go.Figure(data=data, layout=layout)
+pyo.plot(fig)
 
 
 
