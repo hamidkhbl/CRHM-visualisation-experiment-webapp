@@ -64,23 +64,29 @@ def checkTime(df):
             print(colored('Info','red'),': Was not able to fix the time issue. Please make sure your time format is: YYYY-MM-DD HH:MM')
     return df
 
-def plot(df):
+def plot(df, title):
     data = []
     for x in df.columns[1:]:
         trace = go.Scatter(x=df['time'], 
                             y=df[x], 
                             mode='lines',
-                            name=x)
+                            name=x
+                            #fill='tonexty',
+                            #line_color='indigo'
+        )
         data.append(trace)
     print(colored('Info','green'),": Generating plot for {}...".format(obsFileName))
-    layout = go.Layout(title='<b>'+ obsFileName +'<b>', titlefont=dict(family="Balto",
+    layout = go.Layout(title='<b>'+ title +'<b>', titlefont=dict(family="Balto",
                                                         size=35,
                                                         color="black"
+                                                        
                                                         ))
+    layout.hovermode = 'x'
     fig = go.Figure(data=data, layout=layout)
+
     pyo.plot(fig)
 
-plot(checkTime(converttoDF(obsFileName)))
+plot(checkTime(converttoDF(obsFileName)), obsFileName)
 
 
 
