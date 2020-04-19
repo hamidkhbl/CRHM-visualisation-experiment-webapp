@@ -1,7 +1,7 @@
 ## The Cold Regions Hydrological Model (CRHM) data visualization
 
 ### Environment set up
-> Clone the repository and use follwong command to install required packages.
+> Clone the repository and use the following command to install the required packages.
 >
 > `pip install -U -r requirements.txt`
 
