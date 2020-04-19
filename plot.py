@@ -5,6 +5,8 @@ import os
 from termcolor import colored
 import plotly.offline as pyo 
 import plotly.graph_objects as go 
+import random
+import secrets
 
 obsFileName = sys.argv[1]
 
@@ -27,11 +29,11 @@ def convertToCsv(fileName):
     print(colored("Info",'green'),": csv format of {0} saved to csv folder.".format(fileName))
 
 # read header of the obs file
-def converttoDF(obsfileName):
+def converttoDF(fileName):
     print(colored('Info','green'),': Converting obs file to data frame')
     obsColumns = []
     headerCount = 0
-    with open(obsFileName,mode='r') as f:
+    with open(fileName,mode='r') as f:
         for x in range(100):
             head = next(f)
             obsColumns.append(head.strip())
@@ -40,7 +42,7 @@ def converttoDF(obsfileName):
                 break
     obsColumns = obsColumns[1:len(obsColumns)-1]
     # read body of the obs file
-    with open(obsFileName,mode='r') as f:
+    with open(fileName,mode='r') as f:
         body = f.read()
     body = body.split("\n",headerCount)[headerCount]
     bodyList = body.split('\n')
@@ -66,15 +68,23 @@ def checkTime(df):
 
 def plot(df, title):
     data = []
+    shapes = [dict(width=2),dict(width=4, dash='dot'),dict(width=2,dash='dash')]
+    i = 0 
     for x in df.columns[1:]:
+        if i % 2 ==0:
+            shape = shapes[0]
+        else:
+            shape = shapes[1]
         trace = go.Scatter(x=df['time'], 
                             y=df[x], 
                             mode='lines',
-                            name=x
+                            name=x,
+                            line= shape,
                             #fill='tonexty',
                             #line_color='indigo'
         )
         data.append(trace)
+        i = i + 1
     print(colored('Info','green'),": Generating plot for {}...".format(obsFileName))
     layout = go.Layout(title='<b>'+ title +'<b>', titlefont=dict(family="Balto",
                                                         size=35,
