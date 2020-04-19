@@ -9,7 +9,7 @@ certifi==2018.1.18
 chardet==3.0.4
 colorlover==0.3.0
 command-not-found==0.3
-cryptography==2.1.4
+cryptography==2.3
 cufflinks==0.17.3
 cupshelpers==1.0
 decorator==4.4.2
