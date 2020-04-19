@@ -3,6 +3,8 @@ import numpy as np
 import sys
 import os
 from termcolor import colored
+import plotly.offline as pyo 
+import plotly.graph_objects as go 
 
 obsFileName = sys.argv[1]
 
@@ -20,19 +22,33 @@ def convertToCsv(fileName):
     print(colored("Info",'green'),": csv format of {0} saved to csv folder.".format(fileName))
 
 # read header of the obs file
-
 obsColumns = []
+headerCount = 0
 with open(obsFileName,mode='r') as f:
     for x in range(100):
         head = next(f)
         obsColumns.append(head.strip())
         if head.strip() == '######':
-            print(x-1)
+            headerCount = x +1
             break
-
 obsColumns = obsColumns[1:len(obsColumns)-1]
-obsColumns
+
+# read body of the obs file
+with open(obsFileName,mode='r') as f:
+    body = f.read()
+body = body.split("\n",headerCount)[headerCount]
+bodyList = body.split('\n')
+# convert body to dataframe
+
+obsColumns = ['time'] + obsColumns
+
 print(obsColumns)
+df = pd.DataFrame([x.split('\t') for x in bodyList], columns = obsColumns)
+
+print(df.head())
+
+# remove header
+
 
 
 
