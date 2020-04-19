@@ -1,6 +1,9 @@
 ## The Cold Regions Hydrological Model (CRHM) Visualization
 
 ### Environment set up
+> Clone the repository and use follwong command to install required packages.
+>
+> `pip install -U -r requirements.txt`
 
 ### Plot an observation file
 > `python plot.py <obs_file>`
