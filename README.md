@@ -1,4 +1,4 @@
-## The Cold Regions Hydrological Model (CRHM) Visualization
+## The Cold Regions Hydrological Model (CRHM) data visualization
 
 ### Environment set up
 > Clone the repository and use follwong command to install required packages.
