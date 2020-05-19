@@ -2,3 +2,5 @@
 *.csv#
 *.obs
 *.html
+crhm
+__pycache__
