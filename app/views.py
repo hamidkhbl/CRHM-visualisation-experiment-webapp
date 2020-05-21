@@ -40,3 +40,8 @@ def welcome():
         return redirect(url_for("signin"))
 
     return render_template("public/welcome.html")
+
+@app.route("/signout")
+def signout():
+    session.pop("SECRETKEY", None)
+    return redirect(url_for("signin"))
