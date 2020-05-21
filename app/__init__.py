@@ -9,3 +9,4 @@ elif app.config["ENV"] == 'testing':
     app.config.from_object("config.TestingConfig")
 
 from app import views
+from app import admin_views
