@@ -1,8 +1,9 @@
 from app import app
-from flask import Flask, request, redirect, render_template, flash, url_for
+from flask import Flask, request, redirect, render_template, flash, url_for, session
 import sys
 sys.path.append('app/models')
 from user import User
+from datetime import datetime
 
 @app.route("/", methods = ["GET", "POST"])
 @app.route("/signin", methods = ["GET", "POST"])
@@ -17,6 +18,10 @@ def signin():
         user = User()
 
         if user.check_password(username, password):
+            user = User()
+            user = user.get_user(username)
+            user.update_last_time_loggedin(datetime.now())
+            session["SECRETKEY"] = user.secret_key
             flash("Signed in","success")
             return redirect(url_for("welcome"))
         else:
@@ -26,4 +31,12 @@ def signin():
 
 @app.route("/welcome")
 def welcome():
+    if session.get("SECRETKEY", None) is not None:
+        secret_key = session.get('SECRETKEY')
+        user = User()
+        user = user.get_user_by_secret_key(secret_key)
+    else:
+        print("Needs Credential")
+        return redirect(url_for("signin"))
+
     return render_template("public/welcome.html")
