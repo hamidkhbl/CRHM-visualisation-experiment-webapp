@@ -1,5 +1,5 @@
 from app import app
-from flask import Flask, request, redirect, render_template, flash, url_for
+from flask import Flask, request, redirect, render_template, flash, url_for, session
 import sys
 sys.path.append('app/models')
 from user import User
@@ -7,6 +7,11 @@ import secrets
 
 @app.route("/add_user",methods = ["GET", "POST"])
 def add_user():
+
+    if not check_admin():
+        return redirect(url_for("signin"))
+
+
     if request.method == "POST":
         req = request.form
         admin = req.get("admin")
@@ -21,3 +26,17 @@ def add_user():
         )
         user.add()
     return render_template("admin/add_user.html")
+
+
+def check_admin():
+    if session.get("SECRETKEY", None) is not None:
+        secret_key = session.get('SECRETKEY')
+        user = User()
+        user = user.get_user_by_secret_key(secret_key)
+
+        if user.role == 'admin':
+            flash("You have admin access","success")
+            return True
+        else:
+            flash("You need admin access to view the page","danger")
+            return False
