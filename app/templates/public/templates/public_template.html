@@ -41,7 +41,7 @@
   </nav>
 
   <!-- Simple Alert -->
-  <div class="container">
+  <div class="container", id="flash">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
 
@@ -79,5 +79,7 @@
   <script src="{{url_for('static', filename= 'js/app.js')}}"></script>
   {% block script %} {% endblock%}
 </body>
+
+<script type="text/javascript">window.setTimeout("document.getElementById('flash').style.display='none';", 2000); </script>
 
 </html>
