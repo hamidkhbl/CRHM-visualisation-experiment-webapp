@@ -5,7 +5,6 @@ sys.path.append('app/models')
 from user import User
 from datetime import datetime
 
-@app.route("/", methods = ["GET", "POST"])
 @app.route("/signin", methods = ["GET", "POST"])
 def signin():
 
@@ -38,6 +37,7 @@ def get_user():
     else:
         return None
 
+@app.route("/", methods = ["GET", "POST"])
 @app.route("/welcome")
 def welcome():
     user = get_user()
@@ -72,4 +72,9 @@ def upload():
         return redirect(url_for("signin"))
     return render_template("public/upload.html", username = user.username)
 
-
+@app.route("/crhm")
+def crhm():
+    user = get_user()
+    if user is None:
+        return redirect(url_for("signin"))
+    return render_template("public/crhm.html", username = user.username)
