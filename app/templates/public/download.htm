@@ -1,0 +1,49 @@
+{% extends "public/templates/public_template.html"%}
+
+{% block title%}Download{% endblock %}
+
+{% block profile%}
+{{username}}
+{% endblock%}
+
+{% block main%}
+<div class="container">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
+
+    <h1>Download files</h1>
+    <hr>
+    <p>download files</p>
+
+    <div class="row">
+        <div class="column col-6">
+            <p>download the first file</p>
+                <button class="btn"><i class="fa fa-download"></i> Download</button>
+        </div>
+        <div class="column col-6">
+            <p>download the second file</p>
+                <button class="btn bt-primary"><i class="fa fa-download"></i> Download</button>
+        </div>
+    </div>
+    <div class="row">
+        <p></p>
+        <p>feel free to change the data inside the file</p>
+    </div>
+
+    <!-- nav card -->
+    <div class="card">
+        <div class="row">
+            <div class="col-sm-1">
+                <a href="welcome" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
+            </div>
+            <div class="col-sm-10">
+                <p class="text-center font-weight-light">1/6</p>
+            </div>
+            <div class="col-sm-1">
+                <a href="upload" class="btn btn-success btn-lg active float-right" role="button" aria-pressed="true">Next</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{%endblock%}
