@@ -1,5 +1,5 @@
 from app import app
-from flask import Flask, request, redirect, render_template, flash, url_for, session
+from flask import Flask, request, redirect, render_template, flash, url_for, session, send_from_directory, abort
 import sys
 sys.path.append('app/models')
 from user import User
@@ -57,6 +57,13 @@ def profile():
     if user is None:
         return redirect(url_for("signin"))
     return render_template("public/profile.html", user = user)
+
+@app.route("/download_obs/<file_name>")
+def download_obs(file_name):
+    try:
+        return send_from_directory(app.config["OBS_FILES_DIR"], filename=file_name, as_attachment = True)
+    except:
+        abort(404)
 
 @app.route("/download")
 def download():
