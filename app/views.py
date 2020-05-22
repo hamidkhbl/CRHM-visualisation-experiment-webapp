@@ -78,3 +78,10 @@ def crhm():
     if user is None:
         return redirect(url_for("signin"))
     return render_template("public/crhm.html", username = user.username)
+
+@app.route("/data_preview")
+def data_preview():
+    user = get_user()
+    if user is None:
+        return redirect(url_for("signin"))
+    return render_template("public/data_preview.html", username = user.username)
