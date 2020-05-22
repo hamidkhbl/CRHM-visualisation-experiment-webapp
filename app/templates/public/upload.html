@@ -17,17 +17,69 @@
 
     <div class="row">
         <div class="column col-6">
-            <p>upload the first file</p>
-            <button class="btn"><i class="fa fa-upload"></i> Upload</button>
+
+            <form action="/upload_obs" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label></label>
+                    <div class="custom-file col-sm-8">
+                        <input oninput="filesize(this)" type="file" class="custom-file-input" name="obs" id="obs">
+                        <label class="custom-file-label" for="obs">Select the first file...</label>
+                    </div>
+                </div>
+                <button class="btn"><i class="fa fa-upload"></i> Upload</button>
+            </form>
+
+
+            <p></p>
+
         </div>
         <div class="column col-6">
-            <p>upload the second file</p>
-            <button class="btn bt-primary"><i class="fa fa-upload"></i> Upload</button>
+            <form action="/upload_obs" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label></label>
+                    <div class="custom-file col-sm-8">
+                        <input oninput="filesize(this)" type="file" class="custom-file-input" name="obs" id="obs">
+                        <label class="custom-file-label" for="obs">Select the second file...</label>
+                    </div>
+                </div>
+                <button class="btn"><i class="fa fa-upload"></i> Upload</button>
+            </form>
         </div>
     </div>
     <div class="row">
-        <p></p>
-        <p>feel free to change the data inside the file</p>
+        <div class="card">
+            <div class="card-body">
+                <h4>Uploaded files</h4>
+                <hr>
+            <ul>
+                {% if file_count > 2%}
+                {% for f in files %}
+                    <li style="color:red;">
+                        {{f}}
+                    </li>
+                {% endfor %}
+                {% endif %}
+
+                {% if file_count == 2%}
+                {% for f in files %}
+                    <li style="color:green;">
+                        {{f}}
+                    </li>
+                {% endfor %}
+                {% endif %}
+
+                {% if file_count < 2%}
+                {% for f in files %}
+                    <li style="color:gray;">
+                        {{f}}
+                    </li>
+                {% endfor %}
+                {% endif %}
+
+            </ul>
+            </div>
+        </div>
+
     </div>
 
     <!-- nav card -->
@@ -40,9 +92,14 @@
                 <p class="text-center font-weight-light">1/6</p>
             </div>
             <div class="col-sm-1">
-                <a href="data_preview" class="btn btn-success btn-lg active float-right" role="button"
-                    aria-pressed="true">Next</a>
+
+                <form action="/check_files" method="POST" enctype="multipart/form-data">
+                    <button class="btn btn-success btn-lg active float-right"> Next</button>
+                </form>
             </div>
+
+
+
         </div>
 
     </div>
