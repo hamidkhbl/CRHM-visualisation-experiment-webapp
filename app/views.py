@@ -92,3 +92,10 @@ def plot():
     if user is None:
         return redirect(url_for("signin"))
     return render_template("public/plot.html", username = user.username)
+
+@app.route("/questions")
+def questions():
+    user = get_user()
+    if user is None:
+        return redirect(url_for("signin"))
+    return render_template("public/questions.html", username = user.username)

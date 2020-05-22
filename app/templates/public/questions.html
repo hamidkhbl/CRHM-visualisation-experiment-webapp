@@ -1,6 +1,6 @@
 {% extends "public/templates/public_template.html"%}
 
-{% block title%}Plot{% endblock %}
+{% block title%}Questions{% endblock %}
 
 {% block profile%}
 {{username}}
@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
 
-    <h1>Plot</h1>
+    <h1>Questions</h1>
     <hr>
-    <p>Plot</p>
+    <p>Questions</p>
 
     <div class="row">
 
@@ -27,13 +27,13 @@
     <div class="card">
         <div class="row">
             <div class="col-sm-1">
-                <a href="data_preview" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
+                <a href="plot" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
             </div>
             <div class="col-sm-10">
                 <p class="text-center font-weight-light">1/6</p>
             </div>
             <div class="col-sm-1">
-                <a href="questions" class="btn btn-success btn-lg active float-right" role="button"
+                <a href="checkout" class="btn btn-success btn-lg active float-right" role="button"
                     aria-pressed="true">Next</a>
             </div>
         </div>
