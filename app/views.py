@@ -99,3 +99,10 @@ def questions():
     if user is None:
         return redirect(url_for("signin"))
     return render_template("public/questions.html", username = user.username)
+
+@app.route("/checkout")
+def checkout():
+    user = get_user()
+    if user is None:
+        return redirect(url_for("signin"))
+    return render_template("public/checkout.html", username = user.username)
