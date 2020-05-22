@@ -35,7 +35,6 @@ def check_admin():
         user = user.get_user_by_secret_key(secret_key)
 
         if user.role == 'admin':
-            flash("You have admin access","success")
             return True
         else:
             flash("You need admin access to view the page","danger")
