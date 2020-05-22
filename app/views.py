@@ -20,7 +20,7 @@ def signin():
         if user.check_password(username, password):
             user = User()
             user = user.get_user(username)
-            user.update_last_time_loggedin(datetime.now())
+            user.update_last_time_loggedin(datetime.now().replace(microsecond=0))
             session["SECRETKEY"] = user.secret_key
             flash("Signed in","success")
             return redirect(url_for("welcome"))
