@@ -39,9 +39,21 @@ def welcome():
         print("Needs Credential")
         return redirect(url_for("signin"))
 
-    return render_template("public/welcome.html")
+    return render_template("public/welcome.html", username = user.username)
 
 @app.route("/signout")
 def signout():
     session.pop("SECRETKEY", None)
     return redirect(url_for("signin"))
+
+@app.route("/profile")
+
+def profile():
+    if session.get("SECRETKEY", None) is not None:
+        secret_key = session.get('SECRETKEY')
+        user = User()
+        user = user.get_user_by_secret_key(secret_key)
+    else:
+        return redirect(url_for("signin"))
+    return render_template("public/profile.html", user = user)
+

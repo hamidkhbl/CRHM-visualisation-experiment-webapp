@@ -1,0 +1,24 @@
+{% extends "public/templates/public_template.html"%}
+
+{% block title%}Profile{% endblock %}
+
+{% block profile%}
+{{user.username}}
+{% endblock%}
+
+{% block main%}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <h1>Profile</h1>
+            <hr>
+            <div class="card card-body">
+                <label>Username:</label><h4>{{ user.username }}</h4>
+                <hr>
+                <label>Last time logged in:</label><p> {{ user.last_time_loggedin }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
