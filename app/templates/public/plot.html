@@ -1,0 +1,43 @@
+{% extends "public/templates/public_template.html"%}
+
+{% block title%}Plot{% endblock %}
+
+{% block profile%}
+{{username}}
+{% endblock%}
+
+{% block main%}
+<div class="container">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
+
+    <h1>Plot</h1>
+    <hr>
+    <p>Plot</p>
+
+    <div class="row">
+
+    </div>
+    <div class="row">
+        <p></p>
+        <p></p>
+    </div>
+
+    <!-- nav card -->
+    <div class="card">
+        <div class="row">
+            <div class="col-sm-1">
+                <a href="data_preview" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
+            </div>
+            <div class="col-sm-10">
+                <p class="text-center font-weight-light">1/6</p>
+            </div>
+            <div class="col-sm-1">
+                <a href="plot" class="btn btn-success btn-lg active float-right" role="button"
+                    aria-pressed="true">Next</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{%endblock%}

@@ -85,3 +85,10 @@ def data_preview():
     if user is None:
         return redirect(url_for("signin"))
     return render_template("public/data_preview.html", username = user.username)
+
+@app.route("/plot")
+def plot():
+    user = get_user()
+    if user is None:
+        return redirect(url_for("signin"))
+    return render_template("public/plot.html", username = user.username)
