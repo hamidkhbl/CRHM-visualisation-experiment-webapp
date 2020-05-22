@@ -29,15 +29,19 @@ def signin():
 
     return render_template("public/signin.html")
 
-
-@app.route("/welcome")
-def welcome():
+def get_user():
     if session.get("SECRETKEY", None) is not None:
         secret_key = session.get('SECRETKEY')
         user = User()
         user = user.get_user_by_secret_key(secret_key)
+        return user
     else:
-        print("Needs Credential")
+        return None
+
+@app.route("/welcome")
+def welcome():
+    user = get_user()
+    if user is None:
         return redirect(url_for("signin"))
 
     return render_template("public/welcome.html", username = user.username)
@@ -49,21 +53,15 @@ def signout():
 
 @app.route("/profile")
 def profile():
-    if session.get("SECRETKEY", None) is not None:
-        secret_key = session.get('SECRETKEY')
-        user = User()
-        user = user.get_user_by_secret_key(secret_key)
-    else:
+    user = get_user()
+    if user is None:
         return redirect(url_for("signin"))
     return render_template("public/profile.html", user = user)
 
 @app.route("/download")
 def download():
-    if session.get("SECRETKEY", None) is not None:
-        secret_key = session.get('SECRETKEY')
-        user = User()
-        user = user.get_user_by_secret_key(secret_key)
-    else:
+    user = get_user()
+    if user is None:
         return redirect(url_for("signin"))
     return render_template("public/download.htm", username = user.username)
 
