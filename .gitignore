@@ -1,6 +1,7 @@
 *.csv
-*.csv#
+*.csv
 *.obs
-*.html
-crhm
 __pycache__
+temp-plot.html
+crhm
+crhm.db
