@@ -65,3 +65,11 @@ def download():
         return redirect(url_for("signin"))
     return render_template("public/download.htm", username = user.username)
 
+@app.route("/upload")
+def upload():
+    user = get_user()
+    if user is None:
+        return redirect(url_for("signin"))
+    return render_template("public/upload.html", username = user.username)
+
+
