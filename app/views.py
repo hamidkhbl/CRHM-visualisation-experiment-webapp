@@ -106,3 +106,10 @@ def checkout():
     if user is None:
         return redirect(url_for("signin"))
     return render_template("public/checkout.html", username = user.username)
+
+@app.route("/finish")
+def finish():
+    user = get_user()
+    if user is None:
+        return redirect(url_for("signin"))
+    return render_template("public/finish.html", username = user.username)
