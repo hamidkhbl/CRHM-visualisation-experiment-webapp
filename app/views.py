@@ -143,6 +143,10 @@ def check_files():
     user =get_user()
     path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username))+("/obs")
 
+    # create a directory for user
+    if not os.path.exists(path):
+        os.makedirs(path)
+
     number_of_files = len([name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))])
 
     if number_of_files == 2:
