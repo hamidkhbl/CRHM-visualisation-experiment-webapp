@@ -3,7 +3,7 @@ from flask import Flask, request, redirect, render_template, flash, url_for, ses
 import sys
 sys.path.append('app/models')
 sys.path.append('../data')
-from user import User
+from user import User, UserLog
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import os
@@ -23,9 +23,17 @@ def signin():
         if user.check_password(username, password):
             user = User()
             user = user.get_user(username)
+
+            # update last time logged in
             user.update_last_time_loggedin(datetime.now().replace(microsecond=0))
+
             session["SECRETKEY"] = user.secret_key
             flash("Signed in","success")
+
+            # add action to user history
+            user_log = UserLog(user.id, "signin", datetime.now().replace(microsecond=0))
+            user_log.add()
+
             return redirect(url_for("welcome"))
         else:
             flash("Wrong credentials","danger")
@@ -48,11 +56,21 @@ def welcome():
     if user is None:
         return redirect(url_for("signin"))
 
+    # add action to user history
+    user_log = UserLog(user.id, "welcome", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     return render_template("public/welcome.html", username = user.username)
 
 @app.route("/signout")
 def signout():
+    user = get_user()
     session.pop("SECRETKEY", None)
+
+    # add action to user log
+    user_log = UserLog(user.id, "signout", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     return redirect(url_for("signin"))
 
 @app.route("/profile")
@@ -60,6 +78,11 @@ def profile():
     user = get_user()
     if user is None:
         return redirect(url_for("signin"))
+
+    # add action to user log
+    user_log = UserLog(user.id, "profile", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     return render_template("public/profile.html", user = user)
 
 @app.route("/download_obs/<file_name>")
@@ -74,6 +97,11 @@ def download():
     user = get_user()
     if user is None:
         return redirect(url_for("signin"))
+
+    # add action to user log
+    user_log = UserLog(user.id, "download", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     return render_template("public/download.htm", username = user.username)
 
 def allowed_file(file_name):
@@ -88,7 +116,7 @@ def allowed_file(file_name):
 @app.route("/upload_obs", methods=["GET","POST"])
 def upload_obs():
     user =get_user()
-    path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username))
+    path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
 
     # create a directory for user
     if not os.path.exists(path):
@@ -109,10 +137,11 @@ def upload_obs():
                 obs.save(os.path.join(path, filename))
                 flash("File uploaded", "success")
                 return redirect(url_for("upload"))
+
 @app.route("/check_files", methods = ["GET","POST"])
 def check_files():
     user =get_user()
-    path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username))
+    path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username))+("/obs")
 
     number_of_files = len([name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))])
 
@@ -142,13 +171,17 @@ def check_files():
 def upload():
     user = get_user()
     try:
-        path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username))
+        path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) +("/obs")
         files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
     except:
         files = []
 
     if user is None:
         return redirect(url_for("signin"))
+
+    # add action to user log
+    user_log = UserLog(user.id, "upload", datetime.now().replace(microsecond=0))
+    user_log.add()
 
     return render_template("public/upload.html", username = user.username, files = files, file_count = len(files))
 
@@ -157,6 +190,11 @@ def crhm():
     user = get_user()
     if user is None:
         return redirect(url_for("signin"))
+
+    # add action to user log
+    user_log = UserLog(user.id, "crhm", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     return render_template("public/crhm.html", username = user.username)
 
 @app.route("/data_preview")
@@ -164,6 +202,11 @@ def data_preview():
     user = get_user()
     if user is None:
         return redirect(url_for("signin"))
+
+    # add action to user log
+    user_log = UserLog(user.id, "data_preview", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     return render_template("public/data_preview.html", username = user.username)
 
 @app.route("/plot")
@@ -171,6 +214,11 @@ def plot():
     user = get_user()
     if user is None:
         return redirect(url_for("signin"))
+
+    # add action to user log
+    user_log = UserLog(user.id, "plot", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     return render_template("public/plot.html", username = user.username)
 
 @app.route("/questions")
@@ -178,6 +226,11 @@ def questions():
     user = get_user()
     if user is None:
         return redirect(url_for("signin"))
+
+    # add action to user log
+    user_log = UserLog(user.id, "questions", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     return render_template("public/questions.html", username = user.username)
 
 @app.route("/checkout")
@@ -185,6 +238,11 @@ def checkout():
     user = get_user()
     if user is None:
         return redirect(url_for("signin"))
+
+    # add action to user log
+    user_log = UserLog(user.id, "checkout", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     return render_template("public/checkout.html", username = user.username)
 
 @app.route("/finish")
@@ -192,4 +250,9 @@ def finish():
     user = get_user()
     if user is None:
         return redirect(url_for("signin"))
+
+    # add action to user log
+    user_log = UserLog(user.id, "finish", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     return render_template("public/finish.html", username = user.username)

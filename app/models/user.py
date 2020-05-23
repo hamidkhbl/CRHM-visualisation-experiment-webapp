@@ -18,7 +18,7 @@ class User(db.Model):
     secret_key = db.Column(db.String(20), default = False)
 
     def __repr__(self):
-        return f"user({self.username},{self.last_time_loggedin})"
+        return f"user({self.id},{self.username},{self.last_time_loggedin})"
 
     def add(self):
         db.session.add(self)
@@ -54,6 +54,25 @@ class User(db.Model):
 
     def update_last_time_loggedin(self, time):
         self.last_time_loggedin = time
+        db.session.commit()
+
+
+class UserLog(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    userId = db.Column(db.Integer, nullable = False)
+    page = db.Column(db.String(20), nullable = False)
+    time =  db.Column(db.String(20), nullable = False)
+
+    def __init__(self, user_Id, page, time):
+        self.userId = user_Id
+        self.page = page
+        self.time = time
+
+    def __repr__(self):
+        return f"user({self.userId},{self.page}, {self.action},{self.time})"
+
+    def add(self):
+        db.session.add(self)
         db.session.commit()
 
 db.create_all()
