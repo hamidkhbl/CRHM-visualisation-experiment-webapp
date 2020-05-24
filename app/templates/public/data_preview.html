@@ -44,14 +44,14 @@
             {%if data_type == 'Show data side by side'%}
 
 
-                <div class="table col-sm-6">
-                    <div class="table-responsive col-11">
+                <div class="table col-sm-6 ">
+                    <div class="table-responsive col-12" style="height:300px;">
                         {{ df1 | safe}}
                     </div>
                 </div>
 
                 <div class="table col-sm-6">
-                    <div class="table-responsive col-11">
+                    <div class="table-responsive col-12" style="height:300px;">
                         {{ df2 | safe}}
                     </div>
                 </div>
@@ -62,7 +62,7 @@
             {%if data_type == 'Show joined data (based on time)'%}
             <h4>Joined data (based on time)</h4>
             <div class="table">
-                <div class="table-responsive col-11 table">
+                <div class="table-responsive col-11 table" style="height:300px;">
                     {{ df3 | safe}}
                 </div>
             </div>
@@ -71,7 +71,7 @@
             {%if data_type == 'Show joined data (based on id)'%}
             <h4>Joined data (based on id)</h4>
             <div class="table">
-                <div class="table-responsive col-11 table">
+                <div class="table-responsive col-12 table" style="height:300px;">
                     {{ df3 | safe}}
                 </div>
             </div>
