@@ -3,12 +3,12 @@ import numpy as np
 import sys
 import os
 from termcolor import colored
-import plotly.offline as pyo 
-import plotly.graph_objects as go 
+import plotly.offline as pyo
+import plotly.graph_objects as go
 import random
 import secrets
 
-obsFileName = sys.argv[1]
+#obsFileName = sys.argv[1]
 
 # create csv folder
 if not os.path.exists('csv'):
@@ -69,14 +69,14 @@ def checkTime(df):
 def plot(df, title):
     data = []
     shapes = [dict(width=2),dict(width=4, dash='dot'),dict(width=2,dash='dash')]
-    i = 0 
+    i = 0
     for x in df.columns[1:]:
         if i % 2 ==0:
             shape = shapes[0]
         else:
             shape = shapes[1]
-        trace = go.Scatter(x=df['time'], 
-                            y=df[x], 
+        trace = go.Scatter(x=df['time'],
+                            y=df[x],
                             mode='lines',
                             name=x,
                             line= shape,
@@ -85,18 +85,18 @@ def plot(df, title):
         )
         data.append(trace)
         i = i + 1
-    print(colored('Info','green'),": Generating plot for {}...".format(obsFileName))
+    #print(colored('Info','green'),": Generating plot for {}...".format(obsFileName))
     layout = go.Layout(title='<b>'+ title +'<b>', titlefont=dict(family="Balto",
                                                         size=35,
                                                         color="black"
-                                                        
+
                                                         ))
     layout.hovermode = 'x'
     fig = go.Figure(data=data, layout=layout)
 
     pyo.plot(fig)
 
-plot(checkTime(converttoDF(obsFileName)), obsFileName)
+#plot(checkTime(converttoDF(obsFileName)), obsFileName)
 
 
 

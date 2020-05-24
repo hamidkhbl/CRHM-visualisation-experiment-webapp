@@ -13,37 +13,96 @@
 
     <br>
     <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: 40%" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100"></div>
-      </div>
-      <br>
+        <div class="progress-bar" role="progressbar" style="width: 40%" aria-valuenow="10" aria-valuemin="10"
+            aria-valuemax="100"></div>
+    </div>
+    <br>
 
     <h1>Data preview</h1>
     <hr>
-    <p>Data preview</p>
 
-    <div class="row">
 
-    </div>
-    <div class="row">
-        <p></p>
-        <p></p>
-    </div>
+
+    <form action="/data_preview" method="POST">
+        <div  class="form-group col-sm-4">
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Data preview options</label>
+                <select class="form-control" id="data_type" name = "data_type">
+                    <option>Select ...</option>
+                  <option>Show data side by side</option>
+                  <option>Show joined data (based on time)</option>
+                  <option>Show joined data (based on id)</option>
+                </select>
+              </div>
+        </div>
+
+        <button class="btn btn-submit btn-primary">Load Data</button>
+        <br>
+        <br>
+
+        <div class="row">
+            {%if data_type == 'Show data side by side'%}
+
+
+                <div class="table col-sm-6">
+                    <div class="table-responsive col-11">
+                        {{ df1 | safe}}
+                    </div>
+                </div>
+
+                <div class="table col-sm-6">
+                    <div class="table-responsive col-11">
+                        {{ df2 | safe}}
+                    </div>
+                </div>
+
+
+            {% endif %}
+
+            {%if data_type == 'Show joined data (based on time)'%}
+            <h4>Joined data (based on time)</h4>
+            <div class="table">
+                <div class="table-responsive col-11 table">
+                    {{ df3 | safe}}
+                </div>
+            </div>
+            {% endif%}
+
+            {%if data_type == 'Show joined data (based on id)'%}
+            <h4>Joined data (based on id)</h4>
+            <div class="table">
+                <div class="table-responsive col-11 table">
+                    {{ df3 | safe}}
+                </div>
+            </div>
+            {% endif%}
+
+        </div>
+
+    </form>
 
     <!-- nav card -->
     <div class="card">
         <div class="row">
             <div class="col-sm-1">
-                <a href="upload" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
+                <a href="welcome" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
             </div>
             <div class="col-sm-10">
                 <p class="text-center font-weight-light">1/6</p>
             </div>
             <div class="col-sm-1">
-                <a href="plot" class="btn btn-success btn-lg active float-right" role="button"
+                <a href="crhm" class="btn btn-success btn-lg active float-right" role="button"
                     aria-pressed="true">Next</a>
             </div>
         </div>
 
     </div>
 </div>
+
+
+<script>
+    $('table').on('scroll', function () {
+        $("#" + this.id + " > *").width($(this).width() + $(this).scrollLeft());
+    });
+</script>
 {%endblock%}

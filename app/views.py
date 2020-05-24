@@ -3,7 +3,9 @@ from flask import Flask, request, redirect, render_template, flash, url_for, ses
 import sys
 sys.path.append('app/models')
 sys.path.append('../data')
+sys.path.append('app/code')
 from user import User, UserLog
+from plot import converttoDF
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import os
@@ -201,17 +203,45 @@ def crhm():
 
     return render_template("public/crhm.html", username = user.username)
 
-@app.route("/data_preview")
+@app.route("/data_preview", methods = ["GET", "POST"])
 def data_preview():
     user = get_user()
     if user is None:
         return redirect(url_for("signin"))
+    data_type = ""
+    df1_html = ""
+    df2_html = ""
+    df3_html = ""
+    df4_html = ""
+    if request.method == "POST":
+        req = request.form
+        data_type = req.get("data_type")
+        print('*************', data_type)
+        # add action to user log
+        user_log = UserLog(user.id, "data_preview", datetime.now().replace(microsecond=0))
+        user_log.add()
 
-    # add action to user log
-    user_log = UserLog(user.id, "data_preview", datetime.now().replace(microsecond=0))
-    user_log.add()
+        # convert obs file to df
+        path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
+        files = [name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))]
 
-    return render_template("public/data_preview.html", username = user.username)
+        obs_file_1 = path + '/' + files[0]
+        obs_file_2 = path + '/' + files[1]
+
+        df1 = converttoDF(obs_file_1)
+        df1_html = df1.to_html(classes="table table-hover table-striped table-sm table-bordered")
+
+        df2 = converttoDF(obs_file_2)
+        df2_html = df2.to_html(classes="table table-hover table-striped table-sm table-bordered")
+
+        df3 = df1.merge(df2, on = 'time', how ='outer')
+        df3_html = df3.to_html(classes="table table-hover table-striped table-sm table-bordered")
+
+        df4 = df1.merge(df2, how ='outer', left_index=True, right_index=True)
+        df4_html = df4.to_html(classes="table table-hover table-striped table-sm table-bordered")
+
+    return render_template("public/data_preview.html", username = user.username, data_type = data_type, df1 = df1_html, df2 = df2_html, df3 = df3_html, df4 = df4_html)
+
 
 @app.route("/plot")
 def plot():
