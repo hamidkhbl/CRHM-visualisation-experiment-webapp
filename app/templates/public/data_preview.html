@@ -45,13 +45,13 @@
 
 
                 <div class="table col-sm-6 ">
-                    <div class="table-responsive col-12" style="height:300px;">
+                    <div class="table-responsive col-12" style="height:300px;" id="col1" onscroll="OnScroll(this,'col2')">
                         {{ df1 | safe}}
                     </div>
                 </div>
 
                 <div class="table col-sm-6">
-                    <div class="table-responsive col-12" style="height:300px;">
+                    <div class="table-responsive col-12" style="height:300px;" id="col2" onscroll="OnScroll(this,'col1')">
                         {{ df2 | safe}}
                     </div>
                 </div>
@@ -101,8 +101,9 @@
 
 
 <script>
-    $('table').on('scroll', function () {
-        $("#" + this.id + " > *").width($(this).width() + $(this).scrollLeft());
-    });
+    function OnScroll(div,col) {
+        var d1 = document.getElementById(col);
+        d1.scrollTop = div.scrollTop;
+    }
 </script>
 {%endblock%}
