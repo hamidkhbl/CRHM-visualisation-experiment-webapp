@@ -3,6 +3,7 @@ import sys
 sys.path.append("../")
 from app import app
 import os
+from passlib.hash import sha256_crypt
 
 
 db = SQLAlchemy(app)
@@ -12,7 +13,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+file_path
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(20), nullable = False)
-    password = db.Column(db.String(20), nullable = False)
+    password = db.Column(db.String(256), nullable = False)
     last_time_loggedin = db.Column(db.String(20))
     role =  db.Column(db.String(20), nullable = False)
     secret_key = db.Column(db.String(20), default = False)
@@ -21,16 +22,18 @@ class User(db.Model):
         return f"user({self.id},{self.username},{self.last_time_loggedin})"
 
     def add(self):
+        self.username = username.lower()
+        self.password = sha256_crypt.encrypt(self.password)
         db.session.add(self)
         db.session.commit()
 
     def check_password(self, username, password):
         try:
-            result = User.query.filter_by(username = username).first().password
+            result = User.query.filter_by(username = username.lower()).first().password
         except:
             return False
 
-        if password == result:
+        if sha256_crypt.verify(password, result):
             return True
         else:
             return False
@@ -55,6 +58,13 @@ class User(db.Model):
     def update_last_time_loggedin(self, time):
         self.last_time_loggedin = time
         db.session.commit()
+
+
+    def update_password(self, new_password):
+        self.password = sha256_crypt.encrypt(new_password)
+        db.session.add(self)
+        db.session.commit()
+
 
 
 class UserLog(db.Model):
