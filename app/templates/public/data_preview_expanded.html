@@ -1,29 +1,32 @@
-{% extends "public/templates/public_template.html"%}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title%}Data{% endblock %}
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-{% block profile%}
-{{username}}
-{% endblock%}
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
-{% block main%}
-<div class="container">
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+
+        <title>{% block title%} {% endblock%}</title>
+      </head>
+
+</body>
+<div>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
 
-    <br>
-    <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: 40%" aria-valuenow="10" aria-valuemin="10"
-            aria-valuemax="100"></div>
-    </div>
-    <br>
-
-    <h1>Data preview</h1>
-    <hr>
 
 
 
-    <form action="/data_preview" method="POST">
+
+
+    <form action="/data_preview_expanded" method="POST">
         <div  class="form-group col-sm-4">
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Data preview options</label>
@@ -37,36 +40,31 @@
         </div>
 
         <button class="btn btn-submit btn-primary">Load Data</button>
-        <a target="_blank" rel="noopener noreferrer" href="/data_preview_expanded">Expand results</a>
         <br>
         <br>
 
+        <div class="row">
             {%if data_type == 'Show data side by side'%}
 
-            <div class="row">
 
                 <div class="table col-sm-6 ">
-                    <div class="table-responsive col-12" style="height:100vh;" id="col1" onscroll="OnScroll(this,'col2')">
+                    <div class="table-responsive col-12" style="height:100%;" id="col1" onscroll="OnScroll(this,'col2')">
                         {{ df1 | safe}}
                     </div>
                 </div>
 
                 <div class="table col-sm-6">
-                    <div class="table-responsive col-12" style="height:100vh;" id="col2" onscroll="OnScroll(this,'col1')">
+                    <div class="table-responsive col-12" style="height:100%;" id="col2" onscroll="OnScroll(this,'col1')">
                         {{ df2 | safe}}
                     </div>
                 </div>
-
-            </div>
-
 
 
             {% endif %}
 
             {%if data_type == 'Show joined data (based on time)'%}
-            <h4>Joined data (based on time)</h4>
             <div class="table">
-                <div class="table-responsive col-11 table" style="height:300px;">
+                <div class="table-responsive col-11 table" style="height:100%;">
                     {{ df3 | safe}}
                 </div>
             </div>
@@ -81,28 +79,25 @@
             </div>
             {% endif%}
 
-    </form>
-
-    <!-- nav card -->
-    <div class="card">
-        <div class="row">
-            <div class="col-sm-1">
-                <a href="welcome" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
-            </div>
-            <div class="col-sm-10">
-                <p class="text-center font-weight-light">1/6</p>
-            </div>
-            <div class="col-sm-1">
-                <a href="plot" class="btn btn-success btn-lg active float-right" role="button"
-                    aria-pressed="true">Next</a>
-            </div>
         </div>
 
+    </form>
+
     </div>
-    <br>
-    <br>
 </div>
 
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script>
+  <script src="{{url_for('static', filename= 'js/app.js')}}"></script>
 
 <script>
     function OnScroll(div,col) {
@@ -110,4 +105,4 @@
         d1.scrollTop = div.scrollTop;
     }
 </script>
-{%endblock%}
+</html>
