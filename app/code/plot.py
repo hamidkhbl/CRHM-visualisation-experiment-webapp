@@ -66,7 +66,8 @@ def checkTime(df):
             print(colored('Info','red'),': Was not able to fix the time issue. Please make sure your time format is: YYYY-MM-DD HH:MM')
     return df
 
-def plot(df, title):
+def plot_go(df, title, path):
+    os.chdir(path)
     data = []
     shapes = [dict(width=2),dict(width=4, dash='dot'),dict(width=2,dash='dash')]
     i = 0

@@ -5,11 +5,12 @@ sys.path.append('app/models')
 sys.path.append('../data')
 sys.path.append('app/code')
 from user import User, UserLog
-from plot import converttoDF
+from plot import converttoDF, plot_go
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import os
 import glob
+import webbrowser
 
 @app.route("/signin", methods = ["GET", "POST"])
 def signin():
@@ -242,6 +243,25 @@ def data_preview():
 
     return render_template("public/data_preview.html", username = user.username, data_type = data_type, df1 = df1_html, df2 = df2_html, df3 = df3_html, df4 = df4_html)
 
+@app.route("/show_plot", methods = ["GET", "POST"])
+def show_plot():
+    user = get_user()
+
+    path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
+    html_path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username))
+    files = [name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))]
+
+    obs_file_1 = path + '/' + files[0]
+    obs_file_2 = path + '/' + files[1]
+
+
+    df1 = converttoDF(obs_file_1)
+    df2 = converttoDF(obs_file_2)
+    df3 = df1.merge(df2, on = 'time', how ='outer')
+
+    plot_go(df3,'test', html_path)
+
+    return render_template("public/plot.html", username = user.username)
 
 @app.route("/plot")
 def plot():
