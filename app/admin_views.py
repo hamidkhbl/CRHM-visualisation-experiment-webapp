@@ -27,6 +27,20 @@ def add_user():
         user.add()
     return render_template("admin/add_user.html")
 
+@app.route("/update_password",methods = ["GET", "POST"])
+def update_password():
+
+    if not check_admin():
+        return redirect(url_for("signin"))
+
+
+    if request.method == "POST":
+        req = request.form
+        user = User()
+        user = user.get_user(req.get("username"))
+        user.update_password(req.get("password"))
+
+    return render_template("admin/update_password.html")
 
 def check_admin():
     if session.get("SECRETKEY", None) is not None:
