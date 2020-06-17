@@ -66,6 +66,18 @@ def welcome():
 
     return render_template("public/welcome.html", username = user.username)
 
+@app.route("/consent_form", methods = ["GET", "POST"])
+def consent_form():
+    user = get_user()
+    if user is None:
+        return redirect(url_for("signin"))
+
+    # add action to user history
+    user_log = UserLog(user.id, "consent_form", datetime.now().replace(microsecond=0))
+    user_log.add()
+
+    return render_template("public/consent_form.html", username = user.username)
+
 @app.route("/signout")
 def signout():
     user = get_user()

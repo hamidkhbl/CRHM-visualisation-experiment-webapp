@@ -1,0 +1,123 @@
+{% extends "public/templates/public_template.html"%}
+
+{% block title%}Consent form{% endblock %}
+
+{% block profile%}
+{{username}}
+{% endblock%}
+
+{% block main%}
+<div class="container">
+    <br>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: 6%" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100"></div>
+      </div>
+      <br>
+
+    <h3>Consent Form</h3>
+    <hr>
+
+    <h5>
+        Researchers
+    </h5>
+    <p>
+        <li>
+            Hamid Khodabandehloo, Graduate Student, Department of Computer Science, University of Saskatchewan, email: <a href="mailto: hamid.k@usask.ca">hamid.k@usask.ca</a>
+        </li>
+    </p>
+    <br>
+    <h5>
+        Supervisors
+    </h5>
+    <p>
+        <li>
+            Chanchal Roy, Department of Computer Science, University of Saskatchewan, email: <a href="mailto: chanchal.roy@usask.ca">chanchal.roy@usask.ca</a>
+        </li>
+        <li>
+            Banani Roy, Department of Computer Science, University of Saskatchewan, email: <a href="mailto: banani.roy@usask.ca">banani.roy@usask.ca</a>
+        </li>
+    </p>
+    <br>
+    <h5>
+        Purpose of the Study
+    </h5>
+    <p>This study's primary goal is to understand how data visualization can help software testers,
+        and developers detect data-related bugs faster and easier.
+        The output of some data-driven software is a large amount of data, and this output should be tested after
+        each release to make sure that the new changes have not introduced new bugs
+        (in this case, unexpected change of output data).
+    </p>
+    <p>
+        In this experiment, we will work on the output of the <b>Cold Regions Hydrological Model (CRHM)</b> application.
+        This application takes observations data collected from the field,
+        applies some hydrological models, and plots the output in the form of line charts.
+        The testing output of this application after each release is challenging and can lead to generation software bugs.
+    </p>
+    <p>
+        We have introduced a tool that visualizes data in the form of data tables and line charts.
+        Our purpose is to compare the usability of this tool with previous ways of testing the output.
+        This experiment has six steps and will take about 30 minutes to finish.
+    </p>
+    <br>
+
+    <h5>
+        Confidentiality
+    </h5>
+    <p>
+        To protect the anonymity and confidentiality of a participant, all the collected information will be stored against a unique, system-generated ID. Thus, the identity of the participant will remain unknown. Only the researchers will have access to the ID and the information collected in the study.
+    </p>
+    <br>
+    <h5>
+        Potential Risk
+    </h5>
+    <p>
+        There are no known or anticipated risks to you by participating in this study.
+    </p>
+    <br>
+    <h5>
+        Right to Withdraw
+    </h5>
+    <p>
+        Your participation is voluntary and you may decide not to continue this study at any point. However, only completed sessions will be considered in the study.
+    </p>
+    <br>
+    <h5>
+        Follow Up
+    </h5>
+    <p>
+        To obtain a summary of the results from the study, please contact the researchers.
+    </p>
+    <br>
+    <h5>
+        Questions or Concerns
+    </h5>
+    <p>
+        In case of any question, please contact the researcher via email  (<a href="mailto: hamid.k@usask.ca">hamid.k@usask.ca</a>)
+    </p>
+    <br>
+    <p>
+        By completing and submitting the questionnaire, YOUR FREE AND INFORMED CONSENT IS IMPLIED and indicates that you understand the above conditions of participation in this study.
+    </p>
+
+    <p>
+        By pressing the 'I Agree' button below indicates that you have read and understood the descriptions provided. You have had an opportunity to ask questions and your questions have been answered. You consent to participate in this survey.
+    </p>
+
+    <br>
+    <!-- nav card -->
+    <div class="card">
+        <div class="row">
+            <div class="col-sm-1">
+                <a href="welcome" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
+            </div>
+            <div class="col-sm-9">
+                <p class="text-center font-weight-light">1/6</p>
+            </div>
+            <div class="col-sm-2">
+                <a href="download" class="btn btn-success btn-lg active float-right" role="button" aria-pressed="true">I Agree</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{%endblock%}
