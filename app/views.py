@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 import os
 import glob
 import webbrowser
+import pandas as pd
 
 @app.route("/signin", methods = ["GET", "POST"])
 def signin():
@@ -87,6 +88,20 @@ def profile():
     user_log.add()
 
     return render_template("public/profile.html", user = user)
+
+@app.route("/", methods = ["GET", "POST"])
+@app.route("/participants_info")
+def participants_info():
+    user = get_user()
+    if user is None:
+        return redirect(url_for("signin"))
+
+    # add action to user history
+    user_log = UserLog(user.id, "welcome", datetime.now().replace(microsecond=0))
+    user_log.add()
+
+    return render_template("public/participants_info.html", username = user.username)
+
 
 @app.route("/download_obs/<file_name>")
 def download_obs(file_name):
@@ -204,6 +219,12 @@ def crhm():
 
     return render_template("public/crhm.html", username = user.username)
 
+
+def highlight_greaterthan(s,threshold,column):
+    is_max = pd.Series(data=False, index=s.index)
+    is_max[column] = s.loc[column] >= threshold
+    return ['background-color: yellow' if is_max.any() else '' for v in is_max]
+
 @app.route("/data_preview", methods = ["GET", "POST"])
 def data_preview():
     user = get_user()
@@ -230,7 +251,11 @@ def data_preview():
         obs_file_2 = path + '/' + files[1]
 
         df1 = converttoDF(obs_file_1)
-        df1_html = df1.to_html(classes="table table-hover table-striped table-sm table-bordered")
+
+        df1['SWE(1) 1'] = df1['SWE(1) 1'].astype(float)
+        df1_style = df1.style.apply(highlight_greaterthan,threshold=1.0,column=['SWE(1) 1'], axis=1)
+        #print('********************************',df1_style.render())
+        df1_html = df1_style.render(classes="table table-hover table-striped table-sm table-bordered") #df1.to_html(classes="table table-hover table-striped table-sm table-bordered")
 
         df2 = converttoDF(obs_file_2)
         df2_html = df2.to_html(classes="table table-hover table-striped table-sm table-bordered")

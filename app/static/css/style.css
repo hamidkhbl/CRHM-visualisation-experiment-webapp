@@ -12,3 +12,19 @@
   .btn:hover {
     background-color: RoyalBlue;
   }
+
+
+/* .container {
+  width: 200px;
+  height: 500px;
+  overflow-y: auto;
+} */
+
+.leftContainer {
+  float: left;
+}
+
+.rightContainer {
+  float: right;
+}
+
