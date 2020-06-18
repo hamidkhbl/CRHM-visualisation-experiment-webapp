@@ -1,0 +1,36 @@
+{% extends "public/templates/public_template.html"%}
+
+{% block title%}Welcome{% endblock %}
+
+{% block profile%}
+{{username}}
+{% endblock%}
+
+{% block main%}
+<div class="container">
+    <br>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: 1%" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100"></div>
+      </div>
+      <br>
+
+    <h3>How to use CRHM</h3>
+    <hr>
+
+    <!-- nav card -->
+    <div class="card">
+        <div class="row">
+            <div class="col-sm-1">
+                <a href="crhm" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
+            </div>
+            <div class="col-sm-9">
+                <p class="text-center font-weight-light">1/6</p>
+            </div>
+            <div class="col-sm-2">
+                <a href="upload" class="btn btn-success btn-lg active float-right" role="button" aria-pressed="true">Next</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{%endblock%}

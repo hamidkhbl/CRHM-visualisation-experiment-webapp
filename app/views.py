@@ -238,6 +238,17 @@ def crhm():
 
     return render_template("public/crhm.html", username = user.username)
 
+@app.route("/crhm_guid")
+def crhm_guid():
+    user = get_user()
+    if user is None:
+        return redirect(url_for("signin"))
+
+    # add action to user log
+    user_log = UserLog(user.id, "crhm_guid", datetime.now().replace(microsecond=0))
+    user_log.add()
+
+    return render_template("public/crhm_guid.html", username = user.username)
 
 def highlight_greaterthan(s,threshold,column):
     is_max = pd.Series(data=False, index=s.index)
