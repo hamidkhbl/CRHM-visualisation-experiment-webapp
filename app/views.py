@@ -122,6 +122,13 @@ def download_obs(file_name):
     except:
         abort(404)
 
+@app.route("/download_crhm")
+def download_crhm():
+    try:
+        return send_from_directory(app.config["CRHM_APP_DIR"], filename='crhm.zip', as_attachment = True)
+    except:
+        abort(404)
+
 @app.route("/download")
 def download():
     user = get_user()
