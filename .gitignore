@@ -7,3 +7,5 @@ crhm
 crhm.db
 migrations
 config.py
+test.py
+crhm.zip
