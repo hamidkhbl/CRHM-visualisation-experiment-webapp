@@ -4,11 +4,17 @@ sys.path.append("../")
 from app import app
 import os
 from passlib.hash import sha256_crypt
-
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
 
 db = SQLAlchemy(app)
 file_path = os.path.abspath(os.getcwd())+"\data/crhm.db"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+file_path
+
+migrate = Migrate(app, db)
+manager = Manager(app)
+
+manager.add_command('db', MigrateCommand)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -16,13 +22,20 @@ class User(db.Model):
     password = db.Column(db.String(256), nullable = False)
     last_time_loggedin = db.Column(db.String(20))
     role =  db.Column(db.String(20), nullable = False)
-    secret_key = db.Column(db.String(20), default = False)
+    secret_key = db.Column(db.String(20), nullable = False)
+
+    age = db.Column(db.String(20))
+    crhm_exp = db.Column(db.String(20))
+    gender = db.Column(db.String(20))
+    dev_exp_years = db.Column(db.String(20))
+    test_exp_years = db.Column(db.String(20))
+    role_exp = db.Column(db.String(20))
 
     def __repr__(self):
         return f"user({self.id},{self.username},{self.last_time_loggedin})"
 
     def add(self):
-        self.username = username.lower()
+        self.username = self.username.lower()
         self.password = sha256_crypt.encrypt(self.password)
         db.session.add(self)
         db.session.commit()
@@ -65,7 +78,14 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
-
+    def update_userInfo(self, age, crhm_exp, gender, dev_exp_years, test_exp_years, role_exp):
+        self.age = age
+        self.crhm_exp = crhm_exp
+        self.gender = gender
+        self.dev_exp_years = dev_exp_years
+        self.test_exp_years = test_exp_years
+        self.role_exp = role_exp
+        db.session.commit()
 
 class UserLog(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -84,6 +104,7 @@ class UserLog(db.Model):
     def add(self):
         db.session.add(self)
         db.session.commit()
+
 
 db.create_all()
 db.session.commit()

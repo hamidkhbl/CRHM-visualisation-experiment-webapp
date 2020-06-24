@@ -78,6 +78,25 @@ def consent_form():
 
     return render_template("public/consent_form.html", username = user.username)
 
+@app.route("/participants_info",methods = ["GET", "POST"])
+def participants_info():
+    if request.method == "POST":
+        req = request.form
+
+        user = get_user()
+        age = req.get("age")
+        gender = req.get("genderRadios")
+        crhm_exp = req.get("crhmRadios")
+        dev_exp = req.get("dev_exp")
+        test_exp = req.get("test_exp")
+        role_exp = req.get("role_exp")
+        print('******************', role_exp)
+        user.update_userInfo(age, crhm_exp, gender, dev_exp, test_exp, role_exp)
+        flash("Information saved successfully","success")
+        return render_template("public/download.htm")
+
+    return render_template("public/participants_info.html")
+
 @app.route("/signout")
 def signout():
     user = get_user()
@@ -100,19 +119,6 @@ def profile():
     user_log.add()
 
     return render_template("public/profile.html", user = user)
-
-@app.route("/", methods = ["GET", "POST"])
-@app.route("/participants_info")
-def participants_info():
-    user = get_user()
-    if user is None:
-        return redirect(url_for("signin"))
-
-    # add action to user history
-    user_log = UserLog(user.id, "welcome", datetime.now().replace(microsecond=0))
-    user_log.add()
-
-    return render_template("public/participants_info.html", username = user.username)
 
 
 @app.route("/download_obs/<file_name>")

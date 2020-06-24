@@ -8,53 +8,169 @@
 
 {% block main%}
 <div class="container">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
-    <br>
-    <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100"></div>
-      </div>
-      <br>
-    <h1>Participants Information</h1>
-    <hr>
-
-    <form action="/participants_info">
+    <div class="container">
         <div class="row">
-            <div class="col_sm_6">
-                <label for=""></label>
-                <input type="text">
-            </div>
-                <label for=""></label>
-                <input type="text">
-            <div class="col_sm_6">
+            <div class="col">
 
+                <br>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100"></div>
+                  </div>
+                  <br>
+
+                <h3>Please fill this form</h3>
+                <hr>
+
+                <form action="/participants_info" method="POST">
+                    <div  class="form-group">
+                        <ol>
+
+                            <li>
+                                <div class="row">
+                                    <label class="col-sm-5" for="username">Do you have prior experience using CRHM application?</label>
+                                    <div class="form-check col-sm-1">
+                                        <input class="form-check-input" type="radio" name="crhmRadios" id="crhmRadios_yes" value="Yes" required>
+                                        <label class="form-check-label" for="crhmRadios_yes">
+                                          Yes
+                                        </label>
+                                      </div>
+                                      <div class="form-check col-sm-2">
+                                        <input class="form-check-input" type="radio" name="crhmRadios" id="crhmRadios_no" value="No">
+                                        <label class="form-check-label" for="crhmRadios_no">
+                                          No
+                                        </label>
+                                      </div>
+                                </div>
+                            </li>
+                            <br>
+                            <li>
+                                <div class="row">
+                                    <label class="col-sm-5" for="username">To which gender identity do you most identify?</label>
+                                    <div class="form-check col-sm-1">
+                                        <input class="form-check-input" type="radio" name="genderRadios" id="genderRadios_male" value="male" required>
+                                        <label class="form-check-label" for="genderRadios_male">
+                                          Male
+                                        </label>
+                                      </div>
+                                      <div class="form-check col-sm-1">
+                                        <input class="form-check-input" type="radio" name="genderRadios" id="genderRadios_female" value="female">
+                                        <label class="form-check-label" for="genderRadios_female">
+                                          Female
+                                        </label>
+                                      </div>
+                                      <div class="form-check col-sm-1">
+                                        <input class="form-check-input" type="radio" name="genderRadios" id="genderRadios_other" value="other">
+                                        <label class="form-check-label" for="genderRadios_other">
+                                          Other
+                                        </label>
+                                      </div>
+                                      <div class="form-check col-sm-3">
+                                        <input class="form-check-input" type="radio" name="genderRadios" id="genderRadios_no_answer" value="no_answer">
+                                        <label class="form-check-label" for="genderRadios_no_answer">
+                                            Prefer not to answer
+                                        </label>
+                                      </div>
+                                </div>
+                            </li>
+
+                            <br>
+
+
+                            <li>
+                                <div class="input-group mb-3">
+                                    <label class="col-sm-5" for="username">How old are you?</label>
+                                    <select class="custom-select col-sm-3" id="age" name = "age" required>
+                                      <option disabled selected value>Choose...</option>
+                                      <option value="Under 20 years old">Under 20 years old</option>
+                                      <option value="20 - 30 years old">20 - 30 years old</option>
+                                      <option value="31 - 40 years old">31 - 40 years old</option>
+                                      <option value="41 - 50 years old">41 - 50 years old</option>
+                                      <option value="51 - 60 years old">51 - 60 years old</option>
+                                      <option value="61 years or older">61 years or older</option>
+                                      <option value="Prefer not to answer">Prefer not to answer</option>
+                                    </select>
+                                  </div>
+                            </li>
+
+                            <br>
+
+                            <li>
+                                <div class="input-group mb-3">
+                                    <label class="col-sm-5" for="username">How many years of development experience do you have?</label>
+                                    <select class="custom-select col-sm-3" id="dev_exp" name = "dev_exp" required>
+                                      <option disabled selected value>Choose...</option>
+                                      <option value="No experience">No experience</option>
+                                      <option value="One year">One year</option>
+                                      <option value="Two years">Two years</option>
+                                      <option value="Three years">Three years</option>
+                                      <option value="Four years">Four years</option>
+                                      <option value="Five years or more">Five years or more</option>
+                                    </select>
+                                  </div>
+                            </li>
+
+                            <br>
+
+                            <li>
+                                <div class="input-group mb-3">
+                                    <label class="col-sm-5" for="username">How many years of test experience do you have?</label>
+                                    <select class="custom-select col-sm-3" id="test_exp" name = "test_exp" required>
+                                      <option disabled selected value>Choose...</option>
+                                      <option value="No experience">No experience</option>
+                                      <option value="One year">One year</option>
+                                      <option value="Two years">Two years</option>
+                                      <option value="Three years">Three years</option>
+                                      <option value="Four years">Four years</option>
+                                      <option value="Five years or more">Five years or more</option>
+                                    </select>
+                                  </div>
+                            </li>
+
+
+                            <br>
+
+                            <li>
+                                <div class="input-group mb-3">
+                                    <label class="col-sm-5" for="role_exp">What is your current role?</label>
+                                    <input type="text" name="role_exp" id="role_exp_1" class="form-control col-sm-3" placeholder="Developer, tester, researcher ..." required>
+                                  </div>
+                            </li>
+
+
+                        </ol>
+
+                    </div>
+
+
+
+
+                <br>
             </div>
+        </div>
+    </div>
+
+        <!-- nav card -->
+        <div class="card">
+            <div class="row">
+                <div class="col-sm-1">
+                    <a href="consent_form" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
+                </div>
+                <div class="col-sm-8">
+                    <p class="text-center font-weight-light">1/6</p>
+                </div>
+
+
+                 <div class="col-sm-3">
+                    <button class="btn btn-success btn-lg active float-right get_input">Save and next</button>
+                    <!-- <a href="download" class="btn btn-success btn-lg active float-right get_input" role="button"
+                        aria-pressed="true">Next</a> -->
+                </div>
+            </div>
+
         </div>
     </form>
-
-    <div class="row">
-
-    </div>
-    <div class="row">
-        <p></p>
-        <p></p>
     </div>
 
-    <!-- nav card -->
-    <div class="card">
-        <div class="row">
-            <div class="col-sm-1">
-                <a href="plot" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
-            </div>
-            <div class="col-sm-10">
-                <p class="text-center font-weight-light">1/6</p>
-            </div>
-            <div class="col-sm-1">
-                <a href="checkout" class="btn btn-success btn-lg active float-right" role="button"
-                    aria-pressed="true">Next</a>
-            </div>
-        </div>
-
-    </div>
 </div>
+
 {%endblock%}
