@@ -388,17 +388,25 @@ def questions():
 
     return render_template("public/questions.html", username = user.username)
 
-@app.route("/checkout")
+@app.route("/checkout", methods = ["GET", "POST"])
 def checkout():
     user = get_user()
     if user is None:
         return redirect(url_for("signin"))
 
+    if request.method == "POST":
+        req = request.form
+        user = get_user()
+        email = req.get("email")
+        user.update_userEmail(email)
+        flash("Email saved successfully","success")
+        return render_template("public/finish.html")
+
     # add action to user log
     user_log = UserLog(user.id, "checkout", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    return render_template("public/checkout.html", username = user.username)
+    return render_template("public/checkout.html", username = user.username, email = user.email)
 
 @app.route("/finish")
 def finish():

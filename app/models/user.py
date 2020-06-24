@@ -27,9 +27,10 @@ class User(db.Model):
     age = db.Column(db.String(20))
     crhm_exp = db.Column(db.String(20))
     gender = db.Column(db.String(20))
-    dev_exp_years = db.Column(db.String(20))
-    test_exp_years = db.Column(db.String(20))
-    role_exp = db.Column(db.String(20))
+    dev_exp_years = db.Column(db.String(30))
+    test_exp_years = db.Column(db.String(30))
+    role_exp = db.Column(db.String(50))
+    email = db.Column(db.String(50))
 
     def __repr__(self):
         return f"user({self.id},{self.username},{self.last_time_loggedin})"
@@ -85,6 +86,10 @@ class User(db.Model):
         self.dev_exp_years = dev_exp_years
         self.test_exp_years = test_exp_years
         self.role_exp = role_exp
+        db.session.commit()
+
+    def update_userEmail(self, email):
+        self.email = email
         db.session.commit()
 
 class UserLog(db.Model):

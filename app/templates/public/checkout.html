@@ -12,12 +12,17 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
     <br>
     <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: 70%" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100"></div>
+        <div class="progress-bar" role="progressbar" style="width: 95%" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100"></div>
       </div>
       <br>
-    <h1>Checkout</h1>
+    <h3>Checkout</h3>
     <hr>
-    <p>Checkout</p>
+    <form action="/checkout" method="POST">
+        <div class="input-group mb-3">
+            <label class="col-sm-5" for="role_exp">If you want to participate in the 50 CAD draw please insert your email</label>
+            <input type="email" name="email" id="email" class="form-control col-sm-3" placeholder="john@smith.com" value={{email}}>
+          </div>
+
 
     <div class="row">
 
@@ -33,14 +38,19 @@
             <div class="col-sm-1">
                 <a href="questions" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
             </div>
-            <div class="col-sm-10">
+            <div class="col-sm-8">
                 <p class="text-center font-weight-light">1/6</p>
             </div>
-            <div class="col-sm-1">
+            <!-- <div class="col-sm-1">
                 <a href="finish" class="btn btn-success btn-lg active float-right" role="button"
                     aria-pressed="true">Next</a>
+            </div> -->
+
+            <div class="col-sm-3">
+                <button class="btn btn-success btn-lg active float-right get_input">Save and next</button>
             </div>
         </div>
+    </form>
 
     </div>
 </div>
