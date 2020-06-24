@@ -2,11 +2,14 @@ from app import app
 from flask import Flask, request, redirect, render_template, flash, url_for, session
 import sys
 sys.path.append('app/models')
-from user import User
+from user import User, UserLog
 import secrets
 
 @app.route("/add_user",methods = ["GET", "POST"])
 def add_user():
+    user = get_user()
+    if user is None:
+        return redirect(url_for("signin"))
 
     if not check_admin():
         return redirect(url_for("signin"))
@@ -29,6 +32,10 @@ def add_user():
 
 @app.route("/update_password",methods = ["GET", "POST"])
 def update_password():
+
+    user = get_user()
+    if user is None:
+        return redirect(url_for("signin"))
 
     if not check_admin():
         return redirect(url_for("signin"))
@@ -53,3 +60,12 @@ def check_admin():
         else:
             flash("You need admin access to view the page","danger")
             return False
+
+def get_user():
+    if session.get("SECRETKEY", None) is not None:
+        secret_key = session.get('SECRETKEY')
+        user = User()
+        user = user.get_user_by_secret_key(secret_key)
+        return user
+    else:
+        return None
