@@ -110,6 +110,34 @@ class UserLog(db.Model):
         db.session.add(self)
         db.session.commit()
 
+class NasaTLX(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    userId = db.Column(db.Integer, nullable = False)
+    page = db.Column(db.String(20), nullable = False)
+    mental_demanding = db.Column(db.String(20), nullable = False)
+    physically_demanding =  db.Column(db.String(20), nullable = False)
+    hurried_rushed =  db.Column(db.String(20), nullable = False)
+    successful_accomplishing =  db.Column(db.String(20), nullable = False)
+    hard_performance =  db.Column(db.String(20), nullable = False)
+    insecure_discouraged =  db.Column(db.String(20), nullable = False)
+
+    def __init__(self, user_Id, page, mental_demanding, physically_demanding, hurried_rushed, successful_accomplishing, hard_performance, insecure_discouraged):
+        self.userId = user_Id
+        self.page = page
+        self.mental_demanding = mental_demanding
+        self.physically_demanding = physically_demanding
+        self.hurried_rushed = hurried_rushed
+        self.successful_accomplishing = successful_accomplishing
+        self.hard_performance = hard_performance
+        self.insecure_discouraged = insecure_discouraged
+
+    def __repr__(self):
+        return f"user({self.userId},{self.page}"
+
+    def add(self):
+        db.session.add(self)
+        db.session.commit()
+
 
 db.create_all()
 db.session.commit()

@@ -1,0 +1,72 @@
+{% extends "public/templates/public_template.html"%}
+
+{% block title%}CRHM Evaluation{% endblock %}
+
+{% block profile%}
+{{username}}
+{% endblock%}
+
+{% block main%}
+<div class="container">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
+
+    <br>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="10" aria-valuemin="10"
+            aria-valuemax="100"></div>
+    </div>
+    <br>
+    <h3>Evaluation of CRHM</h3>
+    <p>Please answer the following questions.</p>
+    <hr>
+
+    <form action="/crhm_tlx" method="POST">
+        <ol>
+            {%for question in questions%}
+            <li>
+                <label class="col-sm-12" for="username"><b>{{question[0]}}</b></label>
+                <div class="row">
+                    <label class="col-sm-1" for="username">Very Low</label>
+                    {%for item in answers%}
+                    <div class="form-check col-sm-1">
+                        <input class="form-check-input" type="radio" name={{question[1]}} id="{{question[1]}}_{{item}}" value="{{item}}"
+                            required>
+                        <label class="form-check-label" for="{{question[1]}}_{{item}}">
+                            {{item}}
+                        </label>
+                    </div>
+                    {% endfor %}
+                    <label class="col-sm-1" for="username">Very High</label>
+                </div>
+            </li>
+            <hr>
+            {%endfor%}
+        </ol>
+
+        <div class="row">
+
+        </div>
+
+        <!-- nav card -->
+        <div class="card">
+            <div class="row">
+                <div class="col-sm-1">
+                    <a href="checkout" class="btn btn-secondary btn-lg active" role="button"
+                        aria-pressed="true">Back</a>
+                </div>
+                <div class="col-sm-8">
+                    <p class="text-center font-weight-light">1/6</p>
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-success btn-lg active float-right get_input">Save and next</button>
+                    <!-- <a href="signout" class="btn btn-success btn-lg active float-right" role="button"
+                        aria-pressed="true">Finish</a> -->
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+<br>
+{%endblock%}

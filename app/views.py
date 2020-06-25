@@ -4,7 +4,7 @@ import sys
 sys.path.append('app/models')
 sys.path.append('../data')
 sys.path.append('app/code')
-from user import User, UserLog
+from user import User, UserLog, NasaTLX
 from plot import converttoDF, plot_go
 from datetime import datetime
 from werkzeug.utils import secure_filename
@@ -80,10 +80,9 @@ def consent_form():
 
 @app.route("/participants_info",methods = ["GET", "POST"])
 def participants_info():
+    user = get_user()
     if request.method == "POST":
         req = request.form
-
-        user = get_user()
         age = req.get("age")
         gender = req.get("genderRadios")
         crhm_exp = req.get("crhmRadios")
@@ -95,7 +94,7 @@ def participants_info():
         flash("Information saved successfully","success")
         return render_template("public/download.htm")
 
-    return render_template("public/participants_info.html")
+    return render_template("public/participants_info.html", username = user.username, crhm_exp = user.crhm_exp)
 
 @app.route("/signout")
 def signout():
@@ -260,6 +259,27 @@ def highlight_greaterthan(s,threshold,column):
     is_max = pd.Series(data=False, index=s.index)
     is_max[column] = s.loc[column] >= threshold
     return ['background-color: yellow' if is_max.any() else '' for v in is_max]
+
+@app.route("/crhm_tlx",methods = ["GET", "POST"])
+def crhm_tlx():
+    user = get_user()
+
+    questions = [['How mental demanding was the task?','mental'],['How physically demanding was the task?','physical'], ['How hurried or rushed was the pace of the task?','hurried'],
+                    ['How successful were you in accomplishing what you were asked to do?','accomplish'], ['How hard did you have to work to accomplish your level of performance?', 'performance'],
+                    ['How insecure, discouraged, irritated stressed and annoyed were you?', 'insecure']]
+    answers = range(1,11)
+
+    if request.method == "POST":
+        req = request.form
+        crhm_nasa_tlx = NasaTLX(user.id,'crhm' ,req.get("mental"), req.get("physical"), req.get("hurried"), req.get("accomplish"), req.get("performance"), req.get("insecure"))
+        crhm_nasa_tlx.add()
+        return render_template("public/crhm_tlx.html", username = user.username)
+
+
+    if user is None:
+        return redirect(url_for("signin"))
+
+    return render_template("public/crhm_tlx.html", username = user.username, answers = answers, questions = questions)
 
 @app.route("/data_preview", methods = ["GET", "POST"])
 def data_preview():
