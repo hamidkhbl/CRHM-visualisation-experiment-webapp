@@ -276,7 +276,7 @@ def crhm_tlx():
         req = request.form
         crhm_nasa_tlx = NasaTLX(user.id,'crhm' ,req.get("mental"), req.get("physical"), req.get("hurried"), req.get("accomplish"), req.get("performance"), req.get("insecure"))
         crhm_nasa_tlx.add()
-        return render_template("public/new_intro.html")
+        return redirect("new_intro")
 
     return render_template("public/crhm_tlx.html", username = user.username, answers = answers, questions = questions)
 
