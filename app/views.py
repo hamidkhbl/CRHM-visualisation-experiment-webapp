@@ -264,6 +264,9 @@ def highlight_greaterthan(s,threshold,column):
 def crhm_tlx():
     user = get_user()
 
+    if user is None:
+        return redirect(url_for("signin"))
+
     questions = [['How mental demanding was the task?','mental'],['How physically demanding was the task?','physical'], ['How hurried or rushed was the pace of the task?','hurried'],
                     ['How successful were you in accomplishing what you were asked to do?','accomplish'], ['How hard did you have to work to accomplish your level of performance?', 'performance'],
                     ['How insecure, discouraged, irritated stressed and annoyed were you?', 'insecure']]
@@ -273,13 +276,29 @@ def crhm_tlx():
         req = request.form
         crhm_nasa_tlx = NasaTLX(user.id,'crhm' ,req.get("mental"), req.get("physical"), req.get("hurried"), req.get("accomplish"), req.get("performance"), req.get("insecure"))
         crhm_nasa_tlx.add()
-        return render_template("public/crhm_tlx.html", username = user.username)
+        return render_template("public/checkout.html", username = user.username)
 
+    return render_template("public/crhm_tlx.html", username = user.username, answers = answers, questions = questions)
+
+@app.route("/new_tlx",methods = ["GET", "POST"])
+def new_tlx():
+    user = get_user()
 
     if user is None:
         return redirect(url_for("signin"))
 
-    return render_template("public/crhm_tlx.html", username = user.username, answers = answers, questions = questions)
+    questions = [['How mental demanding was the task?','mental'],['How physically demanding was the task?','physical'], ['How hurried or rushed was the pace of the task?','hurried'],
+                    ['How successful were you in accomplishing what you were asked to do?','accomplish'], ['How hard did you have to work to accomplish your level of performance?', 'performance'],
+                    ['How insecure, discouraged, irritated stressed and annoyed were you?', 'insecure']]
+    answers = range(1,11)
+
+    if request.method == "POST":
+        req = request.form
+        crhm_nasa_tlx = NasaTLX(user.id,'new' ,req.get("mental"), req.get("physical"), req.get("hurried"), req.get("accomplish"), req.get("performance"), req.get("insecure"))
+        crhm_nasa_tlx.add()
+        return render_template("public/checkout.html", username = user.username)
+
+    return render_template("public/new_tlx.html", username = user.username, answers = answers, questions = questions)
 
 @app.route("/data_preview", methods = ["GET", "POST"])
 def data_preview():
