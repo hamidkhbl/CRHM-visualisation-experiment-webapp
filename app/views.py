@@ -92,7 +92,7 @@ def participants_info():
         print('******************', role_exp)
         user.update_userInfo(age, crhm_exp, gender, dev_exp, test_exp, role_exp)
         flash("Information saved successfully","success")
-        return render_template("public/download.htm")
+        return redirect("download")
 
     return render_template("public/participants_info.html", username = user.username, crhm_exp = user.crhm_exp)
 
@@ -216,19 +216,19 @@ def check_files():
 @app.route("/upload")
 def upload():
     user = get_user()
+
+    if user is None:
+        return redirect(url_for("signin"))
+
     try:
         path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) +("/obs")
         files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
     except:
         files = []
 
-    if user is None:
-        return redirect(url_for("signin"))
-
     # add action to user log
     user_log = UserLog(user.id, "upload", datetime.now().replace(microsecond=0))
     user_log.add()
-
     return render_template("public/upload.html", username = user.username, files = files, file_count = len(files))
 
 @app.route("/crhm")
@@ -276,9 +276,18 @@ def crhm_tlx():
         req = request.form
         crhm_nasa_tlx = NasaTLX(user.id,'crhm' ,req.get("mental"), req.get("physical"), req.get("hurried"), req.get("accomplish"), req.get("performance"), req.get("insecure"))
         crhm_nasa_tlx.add()
-        return render_template("public/checkout.html", username = user.username)
+        return render_template("public/new_intro.html")
 
     return render_template("public/crhm_tlx.html", username = user.username, answers = answers, questions = questions)
+
+@app.route("/new_intro")
+def new_intro():
+    user = get_user()
+
+    if user is None:
+        return redirect(url_for("signin"))
+
+    return render_template("public/new_intro.html")
 
 @app.route("/new_tlx",methods = ["GET", "POST"])
 def new_tlx():
@@ -296,9 +305,11 @@ def new_tlx():
         req = request.form
         crhm_nasa_tlx = NasaTLX(user.id,'new' ,req.get("mental"), req.get("physical"), req.get("hurried"), req.get("accomplish"), req.get("performance"), req.get("insecure"))
         crhm_nasa_tlx.add()
-        return render_template("public/checkout.html", username = user.username)
+        return redirect('checkout')
 
     return render_template("public/new_tlx.html", username = user.username, answers = answers, questions = questions)
+
+
 
 @app.route("/data_preview", methods = ["GET", "POST"])
 def data_preview():
