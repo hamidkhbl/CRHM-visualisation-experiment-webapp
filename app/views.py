@@ -316,16 +316,34 @@ def new_tlx():
     if user is None:
         return redirect(url_for("signin"))
 
-    questions = [['How mental demanding was the task?','mental'],['How physically demanding was the task?','physical'], ['How hurried or rushed was the pace of the task?','hurried'],
-                    ['How successful were you in accomplishing what you were asked to do?','accomplish'], ['How hard did you have to work to accomplish your level of performance?', 'performance'],
-                    ['How insecure, discouraged, irritated stressed and annoyed were you?', 'insecure']]
+    tlx = NasaTLX.get_user_tlx(userId = user.id, page = 'new')
+
+    questions = [['How mental demanding was the task?','mental_demanding'],
+                    ['How physically demanding was the task?','physically_demanding'],
+                    ['How hurried or rushed was the pace of the task?','hurried_rushed'],
+                    ['How successful were you in accomplishing what you were asked to do?','successful_accomplishing'],
+                    ['How hard did you have to work to accomplish your level of performance?', 'hard_performance'],
+                    ['How insecure, discouraged, irritated stressed and annoyed were you?', 'insecure_discouraged']]
     answers = range(1,11)
+
+    if tlx is not None:
+        questions = [['How mental demanding was the task?','mental_demanding',int(tlx.mental_demanding)],
+                    ['How physically demanding was the task?','physically_demanding',int(tlx.physically_demanding)],
+                    ['How hurried or rushed was the pace of the task?','hurried_rushed',int(tlx.hurried_rushed)],
+                    ['How successful were you in accomplishing what you were asked to do?','successful_accomplishing',int(tlx.successful_accomplishing)],
+                    ['How hard did you have to work to accomplish your level of performance?', 'hard_performance', int(tlx.hard_performance)],
+                    ['How insecure, discouraged, irritated stressed and annoyed were you?', 'insecure_discouraged', int(tlx.insecure_discouraged)]]
+        answers = range(1,11)
 
     if request.method == "POST":
         req = request.form
-        crhm_nasa_tlx = NasaTLX(user.id,'new' ,req.get("mental"), req.get("physical"), req.get("hurried"), req.get("accomplish"), req.get("performance"), req.get("insecure"))
-        crhm_nasa_tlx.add()
-        return redirect('checkout')
+        new_nasa_tlx = NasaTLX(user.id,'new' ,req.get("mental_demanding"), req.get("physically_demanding"), req.get("hurried_rushed"), req.get("successful_accomplishing"), req.get("hard_performance"), req.get("insecure_discouraged"))
+        if tlx is None:
+            new_nasa_tlx.add()
+        else:
+            tlx.update_user_tlx(req.get("mental_demanding"), req.get("physically_demanding"), req.get("hurried_rushed"), req.get("successful_accomplishing"), req.get("hard_performance"), req.get("insecure_discouraged"))
+
+        return redirect("checkout")
 
     return render_template("public/new_tlx.html", username = user.username, answers = answers, questions = questions)
 
