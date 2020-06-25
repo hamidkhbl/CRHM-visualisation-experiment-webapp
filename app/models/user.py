@@ -76,7 +76,6 @@ class User(db.Model):
 
     def update_password(self, new_password):
         self.password = sha256_crypt.encrypt(new_password)
-        db.session.add(self)
         db.session.commit()
 
     def update_userInfo(self, age, crhm_exp, gender, dev_exp_years, test_exp_years, role_exp):
@@ -134,8 +133,22 @@ class NasaTLX(db.Model):
     def __repr__(self):
         return f"user({self.userId},{self.page}"
 
+    def get_user_tlx(userId, page):
+        return NasaTLX.query.filter_by(userId = userId).filter_by(page = page).first()
+
     def add(self):
         db.session.add(self)
+        db.session.commit()
+
+
+
+    def update_user_tlx(self, mental_demanding, physically_demanding, hurried_rushed, successful_accomplishing, hard_performance, insecure_discouraged):
+        self.mental_demanding = mental_demanding
+        self.physically_demanding = physically_demanding
+        self.hurried_rushed = hurried_rushed
+        self.successful_accomplishing = successful_accomplishing
+        self.hard_performance = hard_performance
+        self.insecure_discouraged = insecure_discouraged
         db.session.commit()
 
 
