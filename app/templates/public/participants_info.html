@@ -19,7 +19,7 @@
         </div>
         <br>
 
-        <h3>Please fill this form</h3>
+        <h3>Please provide the following information.</h3>
         <hr>
 
         <form action="/participants_info" method="POST">
@@ -258,6 +258,42 @@
                     <option selected="selected" value="Five years or more">Five years or more</option>
                     {% else %}
                     <option value="Five years or more">Five years or more</option>
+                    {% endif %}
+
+                  </select>
+                </div>
+              </li>
+              <br>
+              <li>
+                <div class="input-group mb-3">
+                  <label class="col-sm-5" for="degree">What is your highest level of studies?</label>
+                  <select class="custom-select col-sm-3" id="degree" name="degree" required>
+                    <option disabled selected value>Choose...</option>
+                    {% if degree == "High School Graduate"%}
+                    <option selected="selected" value="High School Graduate">High School Graduate</option>
+                    {% else %}
+                    <option value="High School Graduate">High School Graduate</option>
+                    {% endif %}
+
+
+                    {% if degree == "Bachelor's degree"%}
+                    <option selected="selected" value="Bachelor's degree">Bachelor's degree</option>
+                    {% else %}
+                    <option value="Bachelor's degree">Bachelor's degree</option>
+                    {% endif %}
+
+
+                    {% if degree == "Master's Degree"%}
+                    <option selected="selected" value="Master's Degree">Master's Degree</option>
+                    {% else %}
+                    <option value="Master's Degree">Master's Degree</option>
+                    {% endif %}
+
+
+                    {% if degree == "Doctoral degree"%}
+                    <option selected="selected" value="Doctoral degree">Doctoral degree</option>
+                    {% else %}
+                    <option value="Doctoral degree">Doctoral degree</option>
                     {% endif %}
 
                   </select>

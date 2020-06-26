@@ -30,6 +30,7 @@ class User(db.Model):
     one_sitting = db.Column(db.String(20))
     task1_like = db.Column(db.String(500))
     task2_like = db.Column(db.String(500))
+    degree = db.Column(db.String(30))
 
     def __repr__(self):
         return f"user({self.id},{self.username},{self.last_time_loggedin})"
@@ -77,13 +78,14 @@ class User(db.Model):
         self.password = sha256_crypt.encrypt(new_password)
         db.session.commit()
 
-    def update_userInfo(self, age, crhm_exp, gender, dev_exp_years, test_exp_years, role_exp):
+    def update_userInfo(self, age, crhm_exp, gender, dev_exp_years, test_exp_years, role_exp, degree):
         self.age = age
         self.crhm_exp = crhm_exp
         self.gender = gender
         self.dev_exp_years = dev_exp_years
         self.test_exp_years = test_exp_years
         self.role_exp = role_exp
+        self.degree = degree
         db.session.commit()
 
     def update_user_checkout_Info(self, email, one_sitting, task1_like, task2_like):

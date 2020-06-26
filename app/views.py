@@ -89,14 +89,16 @@ def participants_info():
         dev_exp = req.get("dev_exp")
         test_exp = req.get("test_exp")
         role_exp = req.get("role_exp")
-        if age == user.age and crhm_exp == user.crhm_exp and gender == user.gender and dev_exp == user.dev_exp_years and test_exp == user.test_exp_years and role_exp == user.role_exp:
+        degree = req.get("degree")
+
+        if degree == user.degree and age == user.age and crhm_exp == user.crhm_exp and gender == user.gender and dev_exp == user.dev_exp_years and test_exp == user.test_exp_years and role_exp == user.role_exp:
             return redirect("download")
         else:
-            user.update_userInfo(age, crhm_exp, gender, dev_exp, test_exp, role_exp)
+            user.update_userInfo(age, crhm_exp, gender, dev_exp, test_exp, role_exp, degree)
             flash("Information saved successfully","success")
             return redirect("download")
 
-    return render_template("public/participants_info.html", username = user.username, crhm_exp = user.crhm_exp, gender = user.gender, age = user.age, dev_exp = user.dev_exp_years, test_exp = user.test_exp_years, role = user.role_exp)
+    return render_template("public/participants_info.html", username = user.username, crhm_exp = user.crhm_exp, gender = user.gender, age = user.age, dev_exp = user.dev_exp_years, test_exp = user.test_exp_years, role = user.role_exp, degree = user.degree)
 
 @app.route("/signout")
 def signout():
