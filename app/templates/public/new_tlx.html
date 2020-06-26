@@ -23,6 +23,24 @@
 
     <form action="/new_tlx" method="POST">
         <ol>
+
+            <li>
+                <div class="input-group mb-3">
+                    <label class="col-sm-6" for="new_time"><b>How long did it take for you to finish the task (write in minutes)?</b></label>
+                    <input required type="number" name="new_time" id="new_time" class="form-control col-sm-3" value={{time}}>
+                  </div>
+            </li>
+
+            <hr>
+
+            <li>
+                <div class="input-group mb-3">
+                    <label class="col-sm-6" for="new_mismatch"><b> How many data mismatches did you find in two files?</b></label>
+                    <input required type="number" name="new_mismatch" id="new_mismatch" class="form-control col-sm-3" value={{mismatch}}>
+                  </div>
+            </li>
+            <hr>
+
             {%for question in questions%}
             <li>
                 <label class="col-sm-12" for="username"><b>{{question[0]}}</b></label>

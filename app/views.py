@@ -290,15 +290,15 @@ def crhm_tlx():
 
     if request.method == "POST":
         req = request.form
-        crhm_nasa_tlx = NasaTLX(user.id,'crhm' ,req.get("mental_demanding"), req.get("physically_demanding"), req.get("hurried_rushed"), req.get("successful_accomplishing"), req.get("hard_performance"), req.get("insecure_discouraged"))
+        crhm_nasa_tlx = NasaTLX(user.id,'crhm' ,req.get("mental_demanding"), req.get("physically_demanding"), req.get("hurried_rushed"), req.get("successful_accomplishing"), req.get("hard_performance"), req.get("insecure_discouraged"), req.get("crhm_time"), req.get("crhm_mismatch"))
         if tlx is None:
             crhm_nasa_tlx.add()
         else:
-            tlx.update_user_tlx(req.get("mental_demanding"), req.get("physically_demanding"), req.get("hurried_rushed"), req.get("successful_accomplishing"), req.get("hard_performance"), req.get("insecure_discouraged"))
+            tlx.update_user_tlx(req.get("mental_demanding"), req.get("physically_demanding"), req.get("hurried_rushed"), req.get("successful_accomplishing"), req.get("hard_performance"), req.get("insecure_discouraged"), req.get("crhm_time"), req.get("crhm_mismatch"))
 
         return redirect("new_intro")
 
-    return render_template("public/crhm_tlx.html", username = user.username, answers = answers, questions = questions)
+    return render_template("public/crhm_tlx.html", username = user.username, answers = answers, questions = questions, time = tlx.time, mismatch = tlx.mismatch)
 
 @app.route("/new_intro")
 def new_intro():
@@ -337,15 +337,15 @@ def new_tlx():
 
     if request.method == "POST":
         req = request.form
-        new_nasa_tlx = NasaTLX(user.id,'new' ,req.get("mental_demanding"), req.get("physically_demanding"), req.get("hurried_rushed"), req.get("successful_accomplishing"), req.get("hard_performance"), req.get("insecure_discouraged"))
+        new_nasa_tlx = NasaTLX(user.id,'new' ,req.get("mental_demanding"), req.get("physically_demanding"), req.get("hurried_rushed"), req.get("successful_accomplishing"), req.get("hard_performance"), req.get("insecure_discouraged"), req.get("new_time"), req.get("new_mismatch"))
         if tlx is None:
             new_nasa_tlx.add()
         else:
-            tlx.update_user_tlx(req.get("mental_demanding"), req.get("physically_demanding"), req.get("hurried_rushed"), req.get("successful_accomplishing"), req.get("hard_performance"), req.get("insecure_discouraged"))
+            tlx.update_user_tlx(req.get("mental_demanding"), req.get("physically_demanding"), req.get("hurried_rushed"), req.get("successful_accomplishing"), req.get("hard_performance"), req.get("insecure_discouraged"), req.get("new_time"), req.get("new_mismatch"))
 
         return redirect("checkout")
 
-    return render_template("public/new_tlx.html", username = user.username, answers = answers, questions = questions)
+    return render_template("public/new_tlx.html", username = user.username, answers = answers, questions = questions, time = tlx.time, mismatch = tlx.mismatch)
 
 
 

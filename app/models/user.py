@@ -121,8 +121,10 @@ class NasaTLX(db.Model):
     successful_accomplishing =  db.Column(db.String(20), nullable = False)
     hard_performance =  db.Column(db.String(20), nullable = False)
     insecure_discouraged =  db.Column(db.String(20), nullable = False)
+    time = db.Column(db.String(20), nullable = False)
+    mismatch = db.Column(db.String(20), nullable = False)
 
-    def __init__(self, user_Id, page, mental_demanding, physically_demanding, hurried_rushed, successful_accomplishing, hard_performance, insecure_discouraged):
+    def __init__(self, user_Id, page, mental_demanding, physically_demanding, hurried_rushed, successful_accomplishing, hard_performance, insecure_discouraged, time, mismatch):
         self.userId = user_Id
         self.page = page
         self.mental_demanding = mental_demanding
@@ -131,6 +133,8 @@ class NasaTLX(db.Model):
         self.successful_accomplishing = successful_accomplishing
         self.hard_performance = hard_performance
         self.insecure_discouraged = insecure_discouraged
+        self.time = time
+        self.mismatch = mismatch
 
     def __repr__(self):
         return f"user({self.userId},{self.page}"
@@ -144,13 +148,15 @@ class NasaTLX(db.Model):
 
 
 
-    def update_user_tlx(self, mental_demanding, physically_demanding, hurried_rushed, successful_accomplishing, hard_performance, insecure_discouraged):
+    def update_user_tlx(self, mental_demanding, physically_demanding, hurried_rushed, successful_accomplishing, hard_performance, insecure_discouraged, time, mismatch):
         self.mental_demanding = mental_demanding
         self.physically_demanding = physically_demanding
         self.hurried_rushed = hurried_rushed
         self.successful_accomplishing = successful_accomplishing
         self.hard_performance = hard_performance
         self.insecure_discouraged = insecure_discouraged
+        self.time = time
+        self.mismatch = mismatch
         db.session.commit()
 
 
