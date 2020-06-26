@@ -486,8 +486,9 @@ def checkout():
         req = request.form
         user = get_user()
         email = req.get("email")
-        user.update_userEmail(email)
-        flash("Email saved successfully","success")
+        if email != user.email :
+            user.update_userEmail(email)
+            flash("Email saved successfully","success")
         return render_template("public/finish.html")
 
     # add action to user log
