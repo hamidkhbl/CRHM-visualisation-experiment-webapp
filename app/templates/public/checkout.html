@@ -19,7 +19,41 @@
     <hr>
     <form action="/checkout" method="POST">
         <div class="input-group mb-3">
-            <label class="col-sm-5" for="role_exp">If you want to participate in the 50 CAD draw please insert your email</label>
+            <label class="col-sm-5" for="username">Did you finish all the tasks in one sitting?</label>
+            <div class="form-check col-sm-1">
+              {%if one_sitting == "Yes"%}
+              <input class="form-check-input" type="radio" name="one_sitting" id="one_sitting_yes" value="Yes" checked required>
+              {% else%}
+              <input class="form-check-input" type="radio" name="one_sitting" id="one_sitting_yes" value="Yes" required>
+              {% endif%}
+              <label class="form-check-label" for="crhmRadios_yes">
+                Yes
+              </label>
+            </div>
+            <div class="form-check col-sm-2">
+              {%if one_sitting == "No"%}
+              <input class="form-check-input" type="radio" name="one_sitting" id="one_sitting_no" value="No" checked>
+              {% else%}
+              <input class="form-check-input" type="radio" name="one_sitting" id="one_sitting_no" value="No">
+              {% endif%}
+              <label class="form-check-label" for="crhmRadios_no">
+                No
+              </label>
+            </div>
+          </div>
+
+          <div class="input-group mb-3">
+            <label class="col-sm-5" for="task1_like">What are the things you liked/disliked in doing Task 1?</label>
+            <input required type="text" rows="5" name="task1_like" id="task1_like" class="form-control col-sm-6" value={{task1_like}}>
+          </div>
+
+          <div class="input-group mb-3">
+            <label class="col-sm-5" for="task2_like">What are the things you liked/disliked in doing Task 2?</label>
+            <input required type="text" rows="5" name="task2_like" id="task2_like" class="form-control col-sm-6" value={{task2_like}}>
+          </div>
+
+        <div class="input-group mb-3">
+            <label class="col-sm-5" for="email">If you want to participate in the 50 CAD draw please insert your email</label>
             <input required type="email" name="email" id="email" class="form-control col-sm-3" placeholder="john@smith.com" value={{email}}>
           </div>
 

@@ -11,11 +11,6 @@ db = SQLAlchemy(app)
 file_path = os.path.abspath(os.getcwd())+"\data/crhm.db"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+file_path
 
-migrate = Migrate(app, db)
-manager = Manager(app)
-
-manager.add_command('db', MigrateCommand)
-
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(20), nullable = False)
@@ -31,6 +26,10 @@ class User(db.Model):
     test_exp_years = db.Column(db.String(30))
     role_exp = db.Column(db.String(50))
     email = db.Column(db.String(50))
+
+    one_sitting = db.Column(db.String(20))
+    task1_like = db.Column(db.String(500))
+    task2_like = db.Column(db.String(500))
 
     def __repr__(self):
         return f"user({self.id},{self.username},{self.last_time_loggedin})"
@@ -87,8 +86,11 @@ class User(db.Model):
         self.role_exp = role_exp
         db.session.commit()
 
-    def update_userEmail(self, email):
+    def update_user_checkout_Info(self, email, one_sitting, task1_like, task2_like):
         self.email = email
+        self.one_sitting = one_sitting
+        self.task1_like = task1_like
+        self.task2_like = task2_like
         db.session.commit()
 
 class UserLog(db.Model):

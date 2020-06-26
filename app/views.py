@@ -486,16 +486,20 @@ def checkout():
         req = request.form
         user = get_user()
         email = req.get("email")
-        if email != user.email :
-            user.update_userEmail(email)
+        one_sitting = req.get("one_sitting")
+        task1_like = req.get("task1_like")
+        task2_like = req.get("task2_like")
+
+        if email != user.email or one_sitting != user.one_sitting or task1_like != user.task1_like or task2_like != user.task2_like:
+            user.update_user_checkout_Info(email, one_sitting, task1_like, task2_like)
             flash("Email saved successfully","success")
-        return render_template("public/finish.html")
+        return redirect("finish")
 
     # add action to user log
     user_log = UserLog(user.id, "checkout", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    return render_template("public/checkout.html", username = user.username, email = user.email)
+    return render_template("public/checkout.html", username = user.username, email = user.email, one_sitting = user.one_sitting, task1_like = user.task1_like, task2_like = user.task2_like)
 
 @app.route("/finish")
 def finish():
