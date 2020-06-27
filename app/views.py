@@ -20,7 +20,6 @@ def signin():
         req = request.form
         username = req.get("username")
         password = req.get("password")
-        print(username, password)
 
         user = User()
 
@@ -202,7 +201,7 @@ def check_files():
         flash("It seems you have uploaded more than two files. Please upload only two files again.",'danger')
         # remove all files
         files = os.listdir(path)
-        print('***********',files)
+
         for f in files:
             os.remove('{}/{}'.format(path,f))
         return redirect(url_for("upload"))
@@ -364,7 +363,6 @@ def data_preview():
     if request.method == "POST":
         req = request.form
         data_type = req.get("data_type")
-        print('*************', data_type)
         # add action to user log
         user_log = UserLog(user.id, "data_preview", datetime.now().replace(microsecond=0))
         user_log.add()
@@ -380,7 +378,7 @@ def data_preview():
 
         df1['SWE(1) 1'] = df1['SWE(1) 1'].astype(float)
         df1_style = df1.style.apply(highlight_greaterthan,threshold=1.0,column=['SWE(1) 1'], axis=1)
-        #print('********************************',df1_style.render())
+
         df1_html = df1_style.render(classes="table table-hover table-striped table-sm table-bordered") #df1.to_html(classes="table table-hover table-striped table-sm table-bordered")
 
         df2 = converttoDF(obs_file_2)
@@ -408,7 +406,6 @@ def data_preview_expanded():
     if request.method == "POST":
         req = request.form
         data_type = req.get("data_type")
-        print('*************', data_type)
         # add action to user log
         user_log = UserLog(user.id, "data_preview", datetime.now().replace(microsecond=0))
         user_log.add()
