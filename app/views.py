@@ -52,12 +52,15 @@ def get_user():
     else:
         return None
 
+
+
 @app.route("/", methods = ["GET", "POST"])
 @app.route("/welcome")
 def welcome():
     user = get_user()
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     # add action to user history
     user_log = UserLog(user.id, "welcome", datetime.now().replace(microsecond=0))
@@ -69,7 +72,8 @@ def welcome():
 def consent_form():
     user = get_user()
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     # add action to user history
     user_log = UserLog(user.id, "consent_form", datetime.now().replace(microsecond=0))
@@ -80,6 +84,9 @@ def consent_form():
 @app.route("/participants_info",methods = ["GET", "POST"])
 def participants_info():
     user = get_user()
+    if user is None:
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
     if request.method == "POST":
         req = request.form
         age = req.get("age")
@@ -114,7 +121,8 @@ def signout():
 def profile():
     user = get_user()
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     # add action to user log
     user_log = UserLog(user.id, "profile", datetime.now().replace(microsecond=0))
@@ -141,7 +149,8 @@ def download_crhm():
 def download():
     user = get_user()
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     # add action to user log
     user_log = UserLog(user.id, "download", datetime.now().replace(microsecond=0))
@@ -161,6 +170,10 @@ def allowed_file(file_name):
 @app.route("/upload_obs", methods=["GET","POST"])
 def upload_obs():
     user =get_user()
+    if user is None:
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
+
     path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
 
     # create a directory for user
@@ -186,6 +199,10 @@ def upload_obs():
 @app.route("/check_files", methods = ["GET","POST"])
 def check_files():
     user =get_user()
+    if user is None:
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
+
     path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username))+("/obs")
 
     # create a directory for user
@@ -221,7 +238,8 @@ def upload():
     user = get_user()
 
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     try:
         path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) +("/obs")
@@ -238,7 +256,8 @@ def upload():
 def crhm():
     user = get_user()
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     # add action to user log
     user_log = UserLog(user.id, "crhm", datetime.now().replace(microsecond=0))
@@ -250,7 +269,8 @@ def crhm():
 def crhm_guid():
     user = get_user()
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     # add action to user log
     user_log = UserLog(user.id, "crhm_guid", datetime.now().replace(microsecond=0))
@@ -268,7 +288,8 @@ def crhm_tlx():
     user = get_user()
 
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     tlx = NasaTLX.get_user_tlx(userId = user.id, page = 'crhm')
 
@@ -306,7 +327,8 @@ def new_intro():
     user = get_user()
 
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     return render_template("public/new_intro.html")
 
@@ -315,7 +337,8 @@ def new_tlx():
     user = get_user()
 
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     tlx = NasaTLX.get_user_tlx(userId = user.id, page = 'new')
 
@@ -354,7 +377,8 @@ def new_tlx():
 def data_preview():
     user = get_user()
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
     data_type = ""
     df1_html = ""
     df2_html = ""
@@ -397,7 +421,8 @@ def data_preview():
 def data_preview_expanded():
     user = get_user()
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
     data_type = ""
     df1_html = ""
     df2_html = ""
@@ -434,6 +459,9 @@ def data_preview_expanded():
 @app.route("/show_plot", methods = ["GET", "POST"])
 def show_plot():
     user = get_user()
+    if user is None:
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
     html_path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username))
@@ -455,7 +483,8 @@ def show_plot():
 def plot():
     user = get_user()
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     # add action to user log
     user_log = UserLog(user.id, "plot", datetime.now().replace(microsecond=0))
@@ -467,7 +496,8 @@ def plot():
 def questions():
     user = get_user()
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     # add action to user log
     user_log = UserLog(user.id, "questions", datetime.now().replace(microsecond=0))
@@ -479,7 +509,8 @@ def questions():
 def checkout():
     user = get_user()
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     if request.method == "POST":
         req = request.form
@@ -504,7 +535,8 @@ def checkout():
 def finish():
     user = get_user()
     if user is None:
-        return redirect(url_for("signin"))
+        flash("Your session has expired.","danger")
+        return render_template("public/signin.html")
 
     # add action to user log
     user_log = UserLog(user.id, "finish", datetime.now().replace(microsecond=0))
