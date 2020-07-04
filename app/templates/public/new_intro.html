@@ -3,7 +3,7 @@
 {% block title%}Welcome{% endblock %}
 
 {% block profile%}
-{{username}}
+{{current_user.username}}
 {% endblock%}
 
 {% block main%}
@@ -15,6 +15,20 @@
       <br>
 
     <h3>New Way Introduction</h3>
+    <p>In this task you need to upload both observation files to our new tool in the next page and you will be able to compare files in two ways:</p>
+    <ol>
+        <li>
+            You can see both data side by side and see if there is any difference between them. You also can join data by time to compare data in a same date and time.
+        </li>
+        <li>
+            Similar to CRHM you can visualize the data but with a different interface.
+        </li>
+
+        <br>
+        <p>
+            In the next three pages you can performed the mentioned tasks and find data mismatches.
+        </p>
+    </ol>
 
 
 

@@ -1,17 +1,18 @@
 from flask_sqlalchemy import SQLAlchemy
 import sys
 sys.path.append("../")
-from app import app
+from app import app, login_manager, db
 import os
 from passlib.hash import sha256_crypt
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
+from flask_login import UserMixin
 
 db = SQLAlchemy(app)
 file_path = os.path.abspath(os.getcwd())+"\data/crhm.db"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+file_path
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(20), nullable = False)
     password = db.Column(db.String(256), nullable = False)
@@ -65,6 +66,10 @@ class User(db.Model):
 
     def get_user(self, username):
         return User.query.filter_by(username = username).first()
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
     def get_user_by_secret_key(self, secret_key):
         return User.query.filter_by(secret_key = secret_key).first()

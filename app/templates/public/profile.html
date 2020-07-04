@@ -3,7 +3,7 @@
 {% block title%}Profile{% endblock %}
 
 {% block profile%}
-{{user.username}}
+{{current_user.username}}
 {% endblock%}
 
 {% block main%}
@@ -13,9 +13,9 @@
         <div class="col-sm-5">
             <h1>Profile</h1>
             <div class="card card-body">
-                <label>Username:</label><h4>{{ user.username }}</h4>
+                <label>Username:</label><h4>{{ current_user.username }}</h4>
                 <hr>
-                <label>Last time logged in:</label><p> {{ user.last_time_loggedin }}
+                <label>Last time logged in:</label><p> {{ current_user.last_time_loggedin }}
                 </p>
             </div>
         </div>

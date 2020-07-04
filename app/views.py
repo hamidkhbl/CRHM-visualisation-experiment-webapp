@@ -12,6 +12,7 @@ import os
 import glob
 import webbrowser
 import pandas as pd
+from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route("/signin", methods = ["GET", "POST"])
 def signin():
@@ -30,24 +31,26 @@ def signin():
             # update last time logged in
             user.update_last_time_loggedin(datetime.now().replace(microsecond=0))
 
-            session["SECRETKEY"] = user.secret_key
-            flash("Signed in","success")
+            login_user(user)
+            next_page = request.args.get('next')
+
+            #session["SECRETKEY"] = user.secret_key
+            #flash("Signed in","success")
 
             # add action to user history
             user_log = UserLog(user.id, "signin", datetime.now().replace(microsecond=0))
             user_log.add()
 
-            return redirect(url_for("welcome"))
+            return redirect(next_page) if next_page else redirect(url_for("welcome"))
         else:
             flash("Wrong credentials","danger")
 
     return render_template("public/signin.html")
 
 def get_user():
-    if session.get("SECRETKEY", None) is not None:
-        secret_key = session.get('SECRETKEY')
+    if current_user.is_authenticated:
         user = User()
-        user = user.get_user_by_secret_key(secret_key)
+        user = user.get_user(current_user.username)
         return user
     else:
         return None
@@ -56,37 +59,32 @@ def get_user():
 
 @app.route("/", methods = ["GET", "POST"])
 @app.route("/welcome")
+@login_required
 def welcome():
     user = get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
-    # add action to user history
+    #add action to user history
     user_log = UserLog(user.id, "welcome", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    return render_template("public/welcome.html", username = user.username)
+    return render_template("public/welcome.html")
 
 @app.route("/consent_form", methods = ["GET", "POST"])
+@login_required
 def consent_form():
     user = get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     # add action to user history
     user_log = UserLog(user.id, "consent_form", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    return render_template("public/consent_form.html", username = user.username)
+    return render_template("public/consent_form.html")
 
 @app.route("/participants_info",methods = ["GET", "POST"])
+@login_required
 def participants_info():
     user = get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
+
     if request.method == "POST":
         req = request.form
         age = req.get("age")
@@ -104,12 +102,13 @@ def participants_info():
             flash("Information saved successfully","success")
             return redirect("download")
 
-    return render_template("public/participants_info.html", username = user.username, crhm_exp = user.crhm_exp, gender = user.gender, age = user.age, dev_exp = user.dev_exp_years, test_exp = user.test_exp_years, role = user.role_exp, degree = user.degree)
+    return render_template("public/participants_info.html", crhm_exp = user.crhm_exp, gender = user.gender, age = user.age, dev_exp = user.dev_exp_years, test_exp = user.test_exp_years, role = user.role_exp, degree = user.degree)
 
 @app.route("/signout")
+@login_required
 def signout():
     user = get_user()
-    session.pop("SECRETKEY", None)
+    logout_user()
 
     # add action to user log
     user_log = UserLog(user.id, "signout", datetime.now().replace(microsecond=0))
@@ -118,11 +117,9 @@ def signout():
     return redirect(url_for("signin"))
 
 @app.route("/profile")
+@login_required
 def profile():
     user = get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     # add action to user log
     user_log = UserLog(user.id, "profile", datetime.now().replace(microsecond=0))
@@ -132,6 +129,7 @@ def profile():
 
 
 @app.route("/download_obs/<file_name>")
+@login_required
 def download_obs(file_name):
     try:
         return send_from_directory(app.config["OBS_FILES_DIR"], filename=file_name, as_attachment = True)
@@ -146,17 +144,15 @@ def download_crhm():
         abort(404)
 
 @app.route("/download")
+@login_required
 def download():
     user = get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     # add action to user log
     user_log = UserLog(user.id, "download", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    return render_template("public/download.htm", username = user.username)
+    return render_template("public/download.htm")
 
 def allowed_file(file_name):
     if not "." in file_name:
@@ -168,11 +164,9 @@ def allowed_file(file_name):
         return False
 
 @app.route("/upload_obs", methods=["GET","POST"])
+@login_required
 def upload_obs():
     user =get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
 
@@ -197,11 +191,9 @@ def upload_obs():
                 return redirect(url_for("upload"))
 
 @app.route("/check_files", methods = ["GET","POST"])
+@login_required
 def check_files():
     user =get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username))+("/obs")
 
@@ -234,12 +226,9 @@ def check_files():
 
 
 @app.route("/upload")
+@login_required
 def upload():
     user = get_user()
-
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     try:
         path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) +("/obs")
@@ -250,33 +239,29 @@ def upload():
     # add action to user log
     user_log = UserLog(user.id, "upload", datetime.now().replace(microsecond=0))
     user_log.add()
-    return render_template("public/upload.html", username = user.username, files = files, file_count = len(files))
+    return render_template("public/upload.html", files = files, file_count = len(files))
 
 @app.route("/crhm")
+@login_required
 def crhm():
     user = get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     # add action to user log
     user_log = UserLog(user.id, "crhm", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    return render_template("public/crhm.html", username = user.username)
+    return render_template("public/crhm.html")
 
 @app.route("/crhm_guid")
+@login_required
 def crhm_guid():
     user = get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     # add action to user log
     user_log = UserLog(user.id, "crhm_guid", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    return render_template("public/crhm_guid.html", username = user.username)
+    return render_template("public/crhm_guid.html")
 
 def highlight_greaterthan(s,threshold,column):
     is_max = pd.Series(data=False, index=s.index)
@@ -286,10 +271,6 @@ def highlight_greaterthan(s,threshold,column):
 @app.route("/crhm_tlx",methods = ["GET", "POST"])
 def crhm_tlx():
     user = get_user()
-
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     tlx = NasaTLX.get_user_tlx(userId = user.id, page = 'crhm')
 
@@ -320,25 +301,18 @@ def crhm_tlx():
 
         return redirect("new_intro")
 
-    return render_template("public/crhm_tlx.html", username = user.username, answers = answers, questions = questions, time = tlx.time, mismatch = tlx.mismatch)
+    return render_template("public/crhm_tlx.html", answers = answers, questions = questions, time = tlx.time, mismatch = tlx.mismatch)
 
 @app.route("/new_intro")
+@login_required
 def new_intro():
     user = get_user()
-
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     return render_template("public/new_intro.html")
 
 @app.route("/new_tlx",methods = ["GET", "POST"])
 def new_tlx():
     user = get_user()
-
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     tlx = NasaTLX.get_user_tlx(userId = user.id, page = 'new')
 
@@ -369,16 +343,15 @@ def new_tlx():
 
         return redirect("checkout")
 
-    return render_template("public/new_tlx.html", username = user.username, answers = answers, questions = questions, time = tlx.time, mismatch = tlx.mismatch)
+    return render_template("public/new_tlx.html", answers = answers, questions = questions, time = tlx.time, mismatch = tlx.mismatch)
 
 
 
 @app.route("/data_preview", methods = ["GET", "POST"])
+@login_required
 def data_preview():
     user = get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
+
     data_type = ""
     df1_html = ""
     df2_html = ""
@@ -414,15 +387,14 @@ def data_preview():
         df4 = df1.merge(df2, how ='outer', left_index=True, right_index=True)
         df4_html = df4.to_html(classes="table table-hover table-striped table-sm table-bordered")
 
-    return render_template("public/data_preview.html", username = user.username, data_type = data_type, df1 = df1_html, df2 = df2_html, df3 = df3_html, df4 = df4_html)
+    return render_template("public/data_preview.html", data_type = data_type, df1 = df1_html, df2 = df2_html, df3 = df3_html, df4 = df4_html)
 
 
 @app.route("/data_preview_expanded", methods = ["GET", "POST"])
+@login_required
 def data_preview_expanded():
     user = get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
+
     data_type = ""
     df1_html = ""
     df2_html = ""
@@ -454,14 +426,12 @@ def data_preview_expanded():
         df4 = df1.merge(df2, how ='outer', left_index=True, right_index=True)
         df4_html = df4.to_html(classes="table table-hover table-striped table-sm table-bordered")
 
-    return render_template("public/data_preview_expanded.html", username = user.username, data_type = data_type, df1 = df1_html, df2 = df2_html, df3 = df3_html, df4 = df4_html)
+    return render_template("public/data_preview_expanded.html", data_type = data_type, df1 = df1_html, df2 = df2_html, df3 = df3_html, df4 = df4_html)
 
 @app.route("/show_plot", methods = ["GET", "POST"])
+@login_required
 def show_plot():
     user = get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
     html_path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username))
@@ -477,40 +447,34 @@ def show_plot():
 
     plot_go(df3,'test', html_path)
 
-    return render_template("public/plot.html", username = user.username)
+    return render_template("public/plot.html")
 
 @app.route("/plot")
+@login_required
 def plot():
     user = get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     # add action to user log
     user_log = UserLog(user.id, "plot", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    return render_template("public/plot.html", username = user.username)
+    return render_template("public/plot.html")
 
 @app.route("/questions")
+@login_required
 def questions():
     user = get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     # add action to user log
     user_log = UserLog(user.id, "questions", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    return render_template("public/questions.html", username = user.username)
+    return render_template("public/questions.html")
 
 @app.route("/checkout", methods = ["GET", "POST"])
+@login_required
 def checkout():
     user = get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     if request.method == "POST":
         req = request.form
@@ -529,17 +493,15 @@ def checkout():
     user_log = UserLog(user.id, "checkout", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    return render_template("public/checkout.html", username = user.username, email = user.email, one_sitting = user.one_sitting, task1_like = user.task1_like, task2_like = user.task2_like)
+    return render_template("public/checkout.html", email = user.email, one_sitting = user.one_sitting, task1_like = user.task1_like, task2_like = user.task2_like)
 
 @app.route("/finish")
+@login_required
 def finish():
     user = get_user()
-    if user is None:
-        flash("Your session has expired.","danger")
-        return render_template("public/signin.html")
 
     # add action to user log
     user_log = UserLog(user.id, "finish", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    return render_template("public/finish.html", username = user.username)
+    return render_template("public/finish.html")
