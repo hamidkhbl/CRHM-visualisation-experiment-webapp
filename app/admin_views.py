@@ -51,7 +51,7 @@ def update_password():
 def check_admin():
     if current_user.is_authenticated:
         user = User()
-        user = user.get_user_by_secret_key(secret_key)
+        user = user.get_user(current_user.username)
 
         if user.role == 'admin':
             return True
