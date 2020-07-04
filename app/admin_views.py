@@ -4,12 +4,12 @@ import sys
 sys.path.append('app/models')
 from user import User, UserLog
 import secrets
+from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route("/add_user",methods = ["GET", "POST"])
+@login_required
 def add_user():
     user = get_user()
-    if user is None:
-        return redirect(url_for("signin"))
 
     if not check_admin():
         return redirect(url_for("signin"))
@@ -31,11 +31,10 @@ def add_user():
     return render_template("admin/add_user.html")
 
 @app.route("/update_password",methods = ["GET", "POST"])
+@login_required
 def update_password():
 
     user = get_user()
-    if user is None:
-        return redirect(url_for("signin"))
 
     if not check_admin():
         return redirect(url_for("signin"))
@@ -50,8 +49,7 @@ def update_password():
     return render_template("admin/update_password.html")
 
 def check_admin():
-    if session.get("SECRETKEY", None) is not None:
-        secret_key = session.get('SECRETKEY')
+    if current_user.is_authenticated:
         user = User()
         user = user.get_user_by_secret_key(secret_key)
 
@@ -62,10 +60,9 @@ def check_admin():
             return False
 
 def get_user():
-    if session.get("SECRETKEY", None) is not None:
-        secret_key = session.get('SECRETKEY')
+    if current_user.is_authenticated:
         user = User()
-        user = user.get_user_by_secret_key(secret_key)
+        user = user.get_user(current_user.username)
         return user
     else:
         return None
