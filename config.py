@@ -11,6 +11,7 @@ class Config(object):
     OBS_FILES_DIR = "E:/Google Drive/git/CRHM_Visualisation/data/obs_files"
     CRHM_APP_DIR = "E:/Google Drive/git/CRHM_Visualisation/data/crhm_app"
     FILE_UPLOADS = "E:/Google Drive/git/CRHM_Visualisation/data/users_data"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///E:/Google Drive/git/CRHM_Visualisation/data/crhm.db"
 
 
     UPLOADS = "/"
@@ -22,6 +23,7 @@ class ProductionConfig(Config):
     OBS_FILES_DIR = "/home/hak335/CRHM-visualisation-experiment-webapp/data/obs_files"
     CRHM_APP_DIR = "/home/hak335/CRHM-visualisation-experiment-webapp/data/crhm_app"
     FILE_UPLOADS = "/home/hak335/CRHM-visualisation-experiment-webapp/users_data"
+    SQLALCHEMY_DATABASE_URI = "sqlite:////home/hak335/CRHM-visualisation-experiment-webapp/data/crhm.db"
     pass
 
 class DevelopmentConfig(Config):

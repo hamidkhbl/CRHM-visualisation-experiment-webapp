@@ -9,8 +9,8 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_login import UserMixin
 
 db = SQLAlchemy(app)
-file_path = os.path.abspath(os.getcwd())+"\data/crhm.db"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+file_path
+#file_path = os.path.abspath(os.getcwd())+"\data/crhm.db"
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+file_path
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True)
