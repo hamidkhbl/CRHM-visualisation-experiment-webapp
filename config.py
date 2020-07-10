@@ -19,9 +19,9 @@ class Config(object):
 
 class ProductionConfig(Config):
     ENV = 'production'
-    OBS_FILES_DIR = "/home/hak335/CRHM-visualisation/data/obs_files"
-    CRHM_APP_DIR = "/home/hak335/CRHM-visualisation/data/crhm_app"
-    FILE_UPLOADS = "/home/hak335/CRHM-visualisation/data/users_data"
+    OBS_FILES_DIR = "/home/hak335/CRHM-visualisation-experiment-webapp/data/obs_files"
+    CRHM_APP_DIR = "/home/hak335/CRHM-visualisation-experiment-webapp/data/crhm_app"
+    FILE_UPLOADS = "/home/hak335/CRHM-visualisation-experiment-webapp/users_data"
     pass
 
 class DevelopmentConfig(Config):
