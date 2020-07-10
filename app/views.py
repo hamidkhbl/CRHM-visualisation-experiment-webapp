@@ -1,5 +1,5 @@
 from app import app
-from flask import Flask, request, redirect, render_template, flash, url_for, session, send_from_directory, abort
+from flask import Flask, request, redirect, render_template, flash, url_for, session, send_from_directory, abort, Blueprint
 import sys
 sys.path.append('app/models')
 sys.path.append('../data')
@@ -14,7 +14,9 @@ import webbrowser
 import pandas as pd
 from flask_login import login_user, current_user, logout_user, login_required
 
-@app.route("/signin", methods = ["GET", "POST"])
+users = Blueprint('users', __name__)
+
+@users.route("/signin", methods = ["GET", "POST"])
 def signin():
 
     if request.method == "POST":
@@ -41,9 +43,11 @@ def signin():
             user_log = UserLog(user.id, "signin", datetime.now().replace(microsecond=0))
             user_log.add()
 
-            return redirect(next_page) if next_page else redirect(url_for("welcome"))
+            #return redirect(next_page) if next_page else redirect(url_for("users.welcome"))
+            return redirect(url_for("users.welcome"))
         else:
             flash("Wrong credentials","danger")
+            return redirect(url_for("users.signin"))
 
     return render_template("public/signin.html")
 
@@ -57,8 +61,8 @@ def get_user():
 
 
 
-@app.route("/", methods = ["GET", "POST"])
-@app.route("/welcome")
+@users.route("/", methods = ["GET", "POST"])
+@users.route("/welcome")
 @login_required
 def welcome():
     user = get_user()
@@ -69,7 +73,7 @@ def welcome():
 
     return render_template("public/welcome.html")
 
-@app.route("/consent_form", methods = ["GET", "POST"])
+@users.route("/consent_form", methods = ["GET", "POST"])
 @login_required
 def consent_form():
     user = get_user()
@@ -80,7 +84,7 @@ def consent_form():
 
     return render_template("public/consent_form.html")
 
-@app.route("/participants_info",methods = ["GET", "POST"])
+@users.route("/participants_info",methods = ["GET", "POST"])
 @login_required
 def participants_info():
     user = get_user()
@@ -104,7 +108,7 @@ def participants_info():
 
     return render_template("public/participants_info.html", crhm_exp = user.crhm_exp, gender = user.gender, age = user.age, dev_exp = user.dev_exp_years, test_exp = user.test_exp_years, role = user.role_exp, degree = user.degree)
 
-@app.route("/signout")
+@users.route("/signout")
 @login_required
 def signout():
     user = get_user()
@@ -114,9 +118,9 @@ def signout():
     user_log = UserLog(user.id, "signout", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    return redirect(url_for("signin"))
+    return redirect(url_for("users.signin"))
 
-@app.route("/profile")
+@users.route("/profile")
 @login_required
 def profile():
     user = get_user()
@@ -128,7 +132,7 @@ def profile():
     return render_template("public/profile.html", user = user)
 
 
-@app.route("/download_obs/<file_name>")
+@users.route("/download_obs/<file_name>")
 @login_required
 def download_obs(file_name):
     try:
@@ -136,14 +140,14 @@ def download_obs(file_name):
     except:
         abort(404)
 
-@app.route("/download_crhm")
+@users.route("/download_crhm")
 def download_crhm():
     try:
         return send_from_directory(app.config["CRHM_APP_DIR"], filename='crhm.zip', as_attachment = True)
     except:
         abort(404)
 
-@app.route("/download")
+@users.route("/download")
 @login_required
 def download():
     user = get_user()
@@ -163,7 +167,7 @@ def allowed_file(file_name):
     else:
         return False
 
-@app.route("/upload_obs", methods=["GET","POST"])
+@users.route("/upload_obs", methods=["GET","POST"])
 @login_required
 def upload_obs():
     user =get_user()
@@ -179,18 +183,18 @@ def upload_obs():
             obs = request.files["obs"]
             if obs.filename =="":
                 flash("Select a file","danger")
-                return redirect(url_for("upload"))
+                return redirect(url_for("users.upload"))
 
             if not allowed_file(obs.filename):
                 flash("File extention not allowed","danger")
-                return redirect(url_for("upload"))
+                return redirect(url_for("users.upload"))
             else:
                 filename = secure_filename(obs.filename)
                 obs.save(os.path.join(path, filename))
                 flash("File uploaded", "success")
-                return redirect(url_for("upload"))
+                return redirect(url_for("users.upload"))
 
-@app.route("/check_files", methods = ["GET","POST"])
+@users.route("/check_files", methods = ["GET","POST"])
 @login_required
 def check_files():
     user =get_user()
@@ -204,7 +208,7 @@ def check_files():
     number_of_files = len([name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))])
 
     if number_of_files == 2:
-        return redirect(url_for("data_preview"))
+        return redirect(url_for("users.data_preview"))
 
     if number_of_files > 2:
         flash("It seems you have uploaded more than two files. Please upload only two files again.",'danger')
@@ -213,19 +217,19 @@ def check_files():
 
         for f in files:
             os.remove('{}/{}'.format(path,f))
-        return redirect(url_for("upload"))
+        return redirect(url_for("users.upload"))
 
     if number_of_files == 1:
         flash("Please upload both files.",'danger')
-        return redirect(url_for("upload"))
+        return redirect(url_for("users.upload"))
 
     if number_of_files < 1:
         flash("Please upload files.",'danger')
-        return redirect(url_for("upload"))
+        return redirect(url_for("users.upload"))
 
 
 
-@app.route("/upload")
+@users.route("/upload")
 @login_required
 def upload():
     user = get_user()
@@ -241,7 +245,7 @@ def upload():
     user_log.add()
     return render_template("public/upload.html", files = files, file_count = len(files))
 
-@app.route("/crhm")
+@users.route("/crhm")
 @login_required
 def crhm():
     user = get_user()
@@ -252,7 +256,7 @@ def crhm():
 
     return render_template("public/crhm.html")
 
-@app.route("/crhm_guid")
+@users.route("/crhm_guid")
 @login_required
 def crhm_guid():
     user = get_user()
@@ -268,7 +272,7 @@ def highlight_greaterthan(s,threshold,column):
     is_max[column] = s.loc[column] >= threshold
     return ['background-color: yellow' if is_max.any() else '' for v in is_max]
 
-@app.route("/crhm_tlx",methods = ["GET", "POST"])
+@users.route("/crhm_tlx",methods = ["GET", "POST"])
 def crhm_tlx():
     user = get_user()
 
@@ -303,14 +307,14 @@ def crhm_tlx():
 
     return render_template("public/crhm_tlx.html", answers = answers, questions = questions, time = tlx.time, mismatch = tlx.mismatch)
 
-@app.route("/new_intro")
+@users.route("/new_intro")
 @login_required
 def new_intro():
     user = get_user()
 
     return render_template("public/new_intro.html")
 
-@app.route("/new_tlx",methods = ["GET", "POST"])
+@users.route("/new_tlx",methods = ["GET", "POST"])
 def new_tlx():
     user = get_user()
 
@@ -347,7 +351,7 @@ def new_tlx():
 
 
 
-@app.route("/data_preview", methods = ["GET", "POST"])
+@users.route("/data_preview", methods = ["GET", "POST"])
 @login_required
 def data_preview():
     user = get_user()
@@ -390,7 +394,7 @@ def data_preview():
     return render_template("public/data_preview.html", data_type = data_type, df1 = df1_html, df2 = df2_html, df3 = df3_html, df4 = df4_html)
 
 
-@app.route("/data_preview_expanded", methods = ["GET", "POST"])
+@users.route("/data_preview_expanded", methods = ["GET", "POST"])
 @login_required
 def data_preview_expanded():
     user = get_user()
@@ -428,7 +432,7 @@ def data_preview_expanded():
 
     return render_template("public/data_preview_expanded.html", data_type = data_type, df1 = df1_html, df2 = df2_html, df3 = df3_html, df4 = df4_html)
 
-@app.route("/show_plot", methods = ["GET", "POST"])
+@users.route("/show_plot", methods = ["GET", "POST"])
 @login_required
 def show_plot():
     user = get_user()
@@ -449,7 +453,7 @@ def show_plot():
 
     return render_template("public/plot.html")
 
-@app.route("/plot")
+@users.route("/plot")
 @login_required
 def plot():
     user = get_user()
@@ -460,7 +464,7 @@ def plot():
 
     return render_template("public/plot.html")
 
-@app.route("/questions")
+@users.route("/questions")
 @login_required
 def questions():
     user = get_user()
@@ -471,7 +475,7 @@ def questions():
 
     return render_template("public/questions.html")
 
-@app.route("/checkout", methods = ["GET", "POST"])
+@users.route("/checkout", methods = ["GET", "POST"])
 @login_required
 def checkout():
     user = get_user()
@@ -495,7 +499,7 @@ def checkout():
 
     return render_template("public/checkout.html", email = user.email, one_sitting = user.one_sitting, task1_like = user.task1_like, task2_like = user.task2_like)
 
-@app.route("/finish")
+@users.route("/finish")
 @login_required
 def finish():
     user = get_user()

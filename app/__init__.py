@@ -12,8 +12,11 @@ elif app.config["ENV"] == 'testing':
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
-login_manager.login_view = 'signin'
+login_manager.login_view = 'users.signin'
 login_manager.login_message_category = 'info'
 
-from app import views
-from app import admin_views
+from app.views import users
+from app.admin_views import admin
+
+app.register_blueprint(users, url_prefix='/visualization')
+app.register_blueprint(admin, url_prefix='/visualization/admin')

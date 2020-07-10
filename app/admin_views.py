@@ -1,18 +1,20 @@
 from app import app
-from flask import Flask, request, redirect, render_template, flash, url_for, session
+from flask import Flask, request, redirect, render_template, flash, url_for, session, Blueprint
 import sys
 sys.path.append('app/models')
 from user import User, UserLog
 import secrets
 from flask_login import login_user, current_user, logout_user, login_required
 
-@app.route("/add_user",methods = ["GET", "POST"])
+admin = Blueprint('admin', __name__)
+
+@admin.route("/add_user",methods = ["GET", "POST"])
 @login_required
 def add_user():
     user = get_user()
 
     if not check_admin():
-        return redirect(url_for("signin"))
+        return redirect(url_for("users.signin"))
 
 
     if request.method == "POST":
@@ -30,14 +32,14 @@ def add_user():
         user.add()
     return render_template("admin/add_user.html")
 
-@app.route("/update_password",methods = ["GET", "POST"])
+@admin.route("/update_password",methods = ["GET", "POST"])
 @login_required
 def update_password():
 
     user = get_user()
 
     if not check_admin():
-        return redirect(url_for("signin"))
+        return redirect(url_for("users.signin"))
 
 
     if request.method == "POST":
