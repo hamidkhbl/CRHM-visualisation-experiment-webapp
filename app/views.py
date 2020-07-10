@@ -369,7 +369,7 @@ def data_preview():
         user_log.add()
 
         # convert obs file to df
-        path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
+        path = os.path.join(app.config["OBS_FILES_DIR"]) #+ ("/{}".format(user.username)) + ("/obs")
         files = [name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))]
 
         obs_file_1 = path + '/' + files[0]
@@ -449,7 +449,7 @@ def show_plot():
     df2 = converttoDF(obs_file_2)
     df3 = df1.merge(df2, on = 'time', how ='outer')
 
-    plot_go(df3,'test', html_path)
+    plot_go(df3,'Data from both files are plotted here', html_path)
 
     return render_template("public/plot.html")
 
