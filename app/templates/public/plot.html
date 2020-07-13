@@ -15,21 +15,42 @@
         <div class="progress-bar" role="progressbar" style="width: 81%" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100"></div>
       </div>
       <br>
-    <h1>Plot</h1>
+    <h1>See the difference on a plot</h1>
     <hr>
-    <p>Plot</p>
-
     <form target="_blank" action="/visualization/show_plot" method = "POST">
-        <button class="btn btn-primary">show plot</button>
+        <button class="btn btn-primary">Open Plot</button>
     </form>
-
-    <div class="row">
-
-    </div>
-    <div class="row">
-        <p></p>
-        <p></p>
-    </div>
+    <br>
+    <p>By clicking on the Show Plot button, a line graph of both data files will open in a new tab. You can perform the following actions on the figure from the panel on the page's top-right corner.</p>
+    <ol>
+        <li>
+            Compare data on hover (Active by default)
+        </li>
+        <li>
+            Show closest data on hover
+        </li>
+        <li>
+            Toggle spike lines (select specific part of a chart to view)
+        </li>
+        <li>
+            Reset axes
+        </li>
+        <li>
+            Auto scale
+        </li>
+        <li>
+            Zoom in and zoom out
+        </li>
+        <li>
+            Pan (move the chart)
+        </li>
+        <li>
+            Download plot as PNG
+        </li>
+    </ol>
+    <img src="/static/img/plotly-panel.png" alt="Italian Trulli">
+    <p>You Also can activate or deactivate a line by clicking on the chart legends.</p>
+    <img src="/static/img/plotly-legend.png" alt="Italian Trulli">
 
     <!-- nav card -->
     <div class="card">
