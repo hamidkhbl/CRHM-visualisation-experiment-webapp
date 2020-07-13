@@ -12,6 +12,7 @@ class Config(object):
     CRHM_APP_DIR = "E:/Google Drive/git/CRHM_Visualisation/data/crhm_app"
     FILE_UPLOADS = "E:/Google Drive/git/CRHM_Visualisation/data/users_data"
     SQLALCHEMY_DATABASE_URI = "sqlite:///E:/Google Drive/git/CRHM_Visualisation/data/crhm.db"
+    HTML_FILE_PATH = "E:/Google Drive/git/CRHM_Visualisation/app/templates/public/user_html"
 
 
     UPLOADS = "/"
@@ -24,6 +25,7 @@ class ProductionConfig(Config):
     CRHM_APP_DIR = "/home/hak335/CRHM-visualisation-experiment-webapp/data/crhm_app"
     FILE_UPLOADS = "/home/hak335/CRHM-visualisation-experiment-webapp/users_data"
     SQLALCHEMY_DATABASE_URI = "sqlite:////home/hak335/CRHM-visualisation-experiment-webapp/data/crhm.db"
+    HTML_FILE_PATH = "/home/hak335/CRHM-visualisation-experiment-webapp/app/templates/public/user_html"
     pass
 
 class DevelopmentConfig(Config):

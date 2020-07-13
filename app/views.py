@@ -447,7 +447,9 @@ def show_plot():
     user = get_user()
 
     path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
-    html_path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username))
+    html_path = os.path.join(app.config["HTML_FILE_PATH"]) + ("/{}".format(user.username))
+    if not os.path.exists(html_path):
+        os.makedirs(html_path)
     files = [name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))]
 
     obs_file_1 = path + '/' + files[0]
@@ -460,7 +462,7 @@ def show_plot():
 
     plot_go(df3,'Data from both files are plotted here', html_path)
 
-    return render_template("public/plot.html")
+    return render_template('public/user_html/'+user.username+'/temp-plot.html')
 
 @users.route("/plot")
 @login_required
