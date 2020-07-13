@@ -267,11 +267,6 @@ def crhm_guid():
 
     return render_template("public/crhm_guid.html")
 
-def highlight_greaterthan(s,threshold,column):
-    is_max = pd.Series(data=False, index=s.index)
-    is_max[column] = s.loc[column] >= threshold
-    return ['background-color: yellow' if is_max.any() else '' for v in is_max]
-
 @users.route("/crhm_tlx",methods = ["GET", "POST"])
 def crhm_tlx():
     user = get_user()
@@ -349,6 +344,10 @@ def new_tlx():
 
     return render_template("public/new_tlx.html", answers = answers, questions = questions, time = tlx.time, mismatch = tlx.mismatch)
 
+def highlight_diff(s,threshold,column):
+    is_max = pd.Series(data=False, index=s.index)
+    is_max[column] = abs(s.loc[column[1]] - s.loc[column[4]]) + abs(s.loc[column[2]] - s.loc[column[5]]) + abs(s.loc[column[3]] - s.loc[column[6]]) >= threshold
+    return ['background-color: yellow' if is_max.any() else '' for v in is_max]
 
 
 @users.route("/data_preview", methods = ["GET", "POST"])
@@ -369,29 +368,39 @@ def data_preview():
         user_log.add()
 
         # convert obs file to df
-        path = os.path.join(app.config["OBS_FILES_DIR"]) #+ ("/{}".format(user.username)) + ("/obs")
+        path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
         files = [name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))]
 
         obs_file_1 = path + '/' + files[0]
         obs_file_2 = path + '/' + files[1]
 
         df1 = converttoDF(obs_file_1)
+        df2 = converttoDF(obs_file_2)
+        df1['SWE(1) 1'] = df1['SWE(1) 1'].astype(float)
+        df1['SWE(2) 1'] = df1['SWE(2) 1'].astype(float)
+        df1['SWE(3) 1'] = df1['SWE(3) 1'].astype(float)
+        df2['SWE(1) 1'] = df2['SWE(1) 1'].astype(float)
+        df2['SWE(2) 1'] = df2['SWE(2) 1'].astype(float)
+        df2['SWE(3) 1'] = df2['SWE(3) 1'].astype(float)
 
         df1['SWE(1) 1'] = df1['SWE(1) 1'].astype(float)
-        df1_style = df1.style.apply(highlight_greaterthan,threshold=1.0,column=['SWE(1) 1'], axis=1)
+        #df1_style = df1.style.apply(highlight_diff_2,threshold=0,column_1=df1.columns, column_2=df2.columns, axis=1)
 
-        df1_html = df1_style.render(classes="table table-hover table-striped table-sm table-bordered") #df1.to_html(classes="table table-hover table-striped table-sm table-bordered")
+        #df1_html = df1_style.render(classes="table table-hover table-striped table-sm table-bordered")
+        #df1.to_html(classes="table table-hover table-striped table-sm table-bordered")
 
-        df2 = converttoDF(obs_file_2)
-        df2_html = df2.to_html(classes="table table-hover table-striped table-sm table-bordered")
+
+        #df2_html = df2.to_html(classes="table table-hover table-striped table-sm table-bordered")
 
         df3 = df1.merge(df2, on = 'time', how ='outer')
-        df3_html = df3.to_html(classes="table table-hover table-striped table-sm table-bordered")
 
-        df4 = df1.merge(df2, how ='outer', left_index=True, right_index=True)
-        df4_html = df4.to_html(classes="table table-hover table-striped table-sm table-bordered")
+        df3_style = df3.style.apply(highlight_diff,threshold=1.0,column=df3.columns, axis=1)
+        df3_html = df3_style.render(classes="table table-hover table-striped table-sm table-bordered")
 
-    return render_template("public/data_preview.html", data_type = data_type, df1 = df1_html, df2 = df2_html, df3 = df3_html, df4 = df4_html)
+        #df4 = df1.merge(df2, how ='outer', left_index=True, right_index=True)
+        #df4_html = df4.to_html(classes="table table-hover table-striped table-sm table-bordered")
+
+    return render_template("public/data_preview.html", data_type = data_type, df3 = df3_html)
 
 
 @users.route("/data_preview_expanded", methods = ["GET", "POST"])
