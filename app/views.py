@@ -453,7 +453,7 @@ def data_preview_expanded():
         user_log.add()
 
         # convert obs file to df
-        path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
+        path = os.path.join(app.config["OBS_FILES_DIR"]) + ("/{}".format(user.username)) + ("/obs")
         files = [name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))]
 
         obs_file_1 = path + '/' + files[0]
@@ -482,14 +482,14 @@ def show_plot():
     user_log = UserLog(user.id, "show_plot", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
+    path = os.path.join(app.config["OBS_FILES_DIR"]) #+ ("/{}".format(user.username)) + ("/obs")
     html_path = os.path.join(app.config["HTML_FILE_PATH"]) + ("/{}".format(user.username))
     if not os.path.exists(html_path):
         os.makedirs(html_path)
     files = [name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))]
 
-    obs_file_1 = path + '/' + files[0]
-    obs_file_2 = path + '/' + files[1]
+    obs_file_1 = path + '/' + 'file1.obs'
+    obs_file_2 = path + '/' + 'file2.obs'
 
 
     df1 = converttoDF(obs_file_1)
