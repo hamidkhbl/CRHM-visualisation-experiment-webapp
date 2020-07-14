@@ -28,7 +28,11 @@
             <form action="/visualization/update_password" method="POST">
                 <div class="form-group">
                     <label for="password">New Password:</label>
-                    <input type="password" name="password" id="password" maxlength="10" class="form-control" >
+                    <input type="password" name="password" id="password" maxlength="25" class="form-control" >
+                </div>
+                <div class="form-group">
+                    <label for="password">Repeat New Password:</label>
+                    <input type="password" name="re_password" id="re_password" maxlength="25" class="form-control" >
                 </div>
 
                 <button class="btn btn-submit btn-primary">Reset password</button>
