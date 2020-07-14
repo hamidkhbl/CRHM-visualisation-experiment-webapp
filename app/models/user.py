@@ -14,11 +14,11 @@ db = SQLAlchemy(app)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(20), nullable = False)
-    password = db.Column(db.String(256), nullable = False)
-    last_time_loggedin = db.Column(db.String(20))
-    role =  db.Column(db.String(20), nullable = False)
-    secret_key = db.Column(db.String(20), nullable = False)
+    username = db.Column(db.String(50), nullable = False)
+    password = db.Column(db.String(500), nullable = False)
+    last_time_loggedin = db.Column(db.String(200))
+    role =  db.Column(db.String(200), nullable = False)
+    secret_key = db.Column(db.String(200), nullable = False)
 
     age = db.Column(db.String(20))
     crhm_exp = db.Column(db.String(20))
@@ -26,7 +26,7 @@ class User(db.Model, UserMixin):
     dev_exp_years = db.Column(db.String(30))
     test_exp_years = db.Column(db.String(30))
     role_exp = db.Column(db.String(50))
-    email = db.Column(db.String(50))
+    email = db.Column(db.String(70))
 
     one_sitting = db.Column(db.String(20))
     task1_like = db.Column(db.String(500))
