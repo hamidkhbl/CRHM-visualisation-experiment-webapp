@@ -300,7 +300,7 @@ def crhm_tlx():
 
         return redirect("new_intro")
 
-    return render_template("public/crhm_tlx.html", answers = answers, questions = questions, time = tlx.time, mismatch = tlx.mismatch)
+    return render_template("public/crhm_tlx.html", answers = answers, questions = questions, time = tlx.time if tlx is not None else '', mismatch = tlx.mismatch if tlx is not None else '')
 
 @users.route("/new_intro")
 @login_required
@@ -342,7 +342,7 @@ def new_tlx():
 
         return redirect("checkout")
 
-    return render_template("public/new_tlx.html", answers = answers, questions = questions, time = tlx.time, mismatch = tlx.mismatch)
+    return render_template("public/new_tlx.html", answers = answers, questions = questions, time = tlx.time if tlx is not None else '', mismatch = tlx.mismatch if tlx is not None else '')
 
 def highlight_diff(s,threshold,column):
     is_max = pd.Series(data=False, index=s.index)
