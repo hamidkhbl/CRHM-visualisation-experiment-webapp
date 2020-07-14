@@ -520,3 +520,16 @@ def finish():
     user_log.add()
 
     return render_template("public/finish.html")
+
+@users.route("/update_password",methods = ["GET", "POST"])
+@login_required
+def update_password():
+
+    user = get_user()
+
+    if request.method == "POST":
+        req = request.form
+        user.update_password(req.get("password"))
+        flash("Password updated","success")
+
+    return render_template("public/profile.html")

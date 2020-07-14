@@ -20,6 +20,22 @@
             </div>
         </div>
     </div>
+<br>
+    <div class="row">
+        <div class="col-sm-5">
+            <h5>Update password</h5>
+
+            <form action="/visualization/update_password" method="POST">
+                <div class="form-group">
+                    <label for="password">New Password:</label>
+                    <input type="password" name="password" id="password" maxlength="10" class="form-control" >
+                </div>
+
+                <button class="btn btn-submit btn-primary">Reset password</button>
+            </form>
+        </div>
+    </div>
+
 </div>
 {%endblock%}
 </body>
