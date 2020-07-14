@@ -89,6 +89,10 @@ def consent_form():
 def participants_info():
     user = get_user()
 
+    # add action to user history
+    user_log = UserLog(user.id, "participants_info", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     if request.method == "POST":
         req = request.form
         age = req.get("age")
@@ -135,6 +139,10 @@ def profile():
 @users.route("/download_obs/<file_name>")
 @login_required
 def download_obs(file_name):
+    user = get_user()
+    # add action to user history
+    user_log = UserLog(user.id, "download_"+file_name, datetime.now().replace(microsecond=0))
+    user_log.add()
     try:
         return send_from_directory(app.config["OBS_FILES_DIR"], filename=file_name, as_attachment = True)
     except:
@@ -142,6 +150,10 @@ def download_obs(file_name):
 
 @users.route("/download_crhm")
 def download_crhm():
+    user = get_user()
+    # add action to user history
+    user_log = UserLog(user.id, "download_crhm", datetime.now().replace(microsecond=0))
+    user_log.add()
     try:
         return send_from_directory(app.config["CRHM_APP_DIR"], filename='crhm.zip', as_attachment = True)
     except:
@@ -171,6 +183,10 @@ def allowed_file(file_name):
 @login_required
 def upload_obs():
     user =get_user()
+
+    # add action to user history
+    user_log = UserLog(user.id, "upload_obs", datetime.now().replace(microsecond=0))
+    user_log.add()
 
     path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
 
@@ -234,6 +250,10 @@ def check_files():
 def upload():
     user = get_user()
 
+    # add action to user history
+    user_log = UserLog(user.id, "upload", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     try:
         path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) +("/obs")
         files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
@@ -271,6 +291,10 @@ def crhm_guid():
 def crhm_tlx():
     user = get_user()
 
+    # add action to user history
+    user_log = UserLog(user.id, "crhm.tlx", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     tlx = NasaTLX.get_user_tlx(userId = user.id, page = 'crhm')
 
     questions = [['How mental demanding was the task?','mental_demanding'],
@@ -307,11 +331,19 @@ def crhm_tlx():
 def new_intro():
     user = get_user()
 
+    # add action to user history
+    user_log = UserLog(user.id, "new_intro", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     return render_template("public/new_intro.html")
 
 @users.route("/new_tlx",methods = ["GET", "POST"])
 def new_tlx():
     user = get_user()
+
+    # add action to user history
+    user_log = UserLog(user.id, "new_txl", datetime.now().replace(microsecond=0))
+    user_log.add()
 
     tlx = NasaTLX.get_user_tlx(userId = user.id, page = 'new')
 
@@ -446,6 +478,10 @@ def data_preview_expanded():
 def show_plot():
     user = get_user()
 
+    # add action to user history
+    user_log = UserLog(user.id, "show_plot", datetime.now().replace(microsecond=0))
+    user_log.add()
+
     path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
     html_path = os.path.join(app.config["HTML_FILE_PATH"]) + ("/{}".format(user.username))
     if not os.path.exists(html_path):
@@ -526,6 +562,9 @@ def finish():
 def update_password():
 
     user = get_user()
+    # add action to user history
+    user_log = UserLog(user.id, "update_password", datetime.now().replace(microsecond=0))
+    user_log.add()
 
     if request.method == "POST":
 

@@ -9,8 +9,8 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_login import UserMixin
 
 db = SQLAlchemy(app)
-#file_path = os.path.abspath(os.getcwd())+"\data/crhm.db"
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+file_path
+
+migrate = Migrate(app, db)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key = True)
@@ -103,7 +103,7 @@ class User(db.Model, UserMixin):
 class UserLog(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     userId = db.Column(db.Integer, nullable = False)
-    page = db.Column(db.String(20), nullable = False)
+    page = db.Column(db.String(200), nullable = False)
     time =  db.Column(db.String(20), nullable = False)
 
     def __init__(self, user_Id, page, time):
@@ -121,15 +121,15 @@ class UserLog(db.Model):
 class NasaTLX(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     userId = db.Column(db.Integer, nullable = False)
-    page = db.Column(db.String(20), nullable = False)
+    page = db.Column(db.String(200), nullable = False)
     mental_demanding = db.Column(db.String(20), nullable = False)
     physically_demanding =  db.Column(db.String(20), nullable = False)
     hurried_rushed =  db.Column(db.String(20), nullable = False)
     successful_accomplishing =  db.Column(db.String(20), nullable = False)
     hard_performance =  db.Column(db.String(20), nullable = False)
     insecure_discouraged =  db.Column(db.String(20), nullable = False)
-    time = db.Column(db.String(20), nullable = False)
-    mismatch = db.Column(db.String(20), nullable = False)
+    time = db.Column(db.Integer, nullable = False)
+    mismatch = db.Column(db.Integer, nullable = False)
 
     def __init__(self, user_Id, page, mental_demanding, physically_demanding, hurried_rushed, successful_accomplishing, hard_performance, insecure_discouraged, time, mismatch):
         self.userId = user_Id
@@ -167,5 +167,5 @@ class NasaTLX(db.Model):
         db.session.commit()
 
 
-db.create_all()
-db.session.commit()
+#db.create_all()
+#db.session.commit()
