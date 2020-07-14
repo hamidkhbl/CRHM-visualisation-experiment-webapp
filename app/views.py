@@ -106,7 +106,7 @@ def participants_info():
             flash("Information saved successfully","success")
             return redirect("download")
 
-    return render_template("public/participants_info.html", crhm_exp = user.crhm_exp, gender = user.gender, age = user.age, dev_exp = user.dev_exp_years, test_exp = user.test_exp_years, role = user.role_exp, degree = user.degree)
+    return render_template("public/participants_info.html", crhm_exp = user.crhm_exp, gender = user.gender, age = user.age, dev_exp = user.dev_exp_years, test_exp = user.test_exp_years, role = user.role_exp if user.role_exp is not None else '', degree = user.degree)
 
 @users.route("/signout")
 @login_required
@@ -508,7 +508,7 @@ def checkout():
     user_log = UserLog(user.id, "checkout", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    return render_template("public/checkout.html", email = user.email, one_sitting = user.one_sitting, task1_like = user.task1_like, task2_like = user.task2_like)
+    return render_template("public/checkout.html", email = user.email if user.email is not None else '', one_sitting = user.one_sitting, task1_like = user.task1_like if user.task1_like is not None else '', task2_like = user.task2_like if user.task2_like is not None else '')
 
 @users.route("/finish")
 @login_required
