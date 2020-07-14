@@ -215,7 +215,7 @@ def upload_obs():
 def check_files():
     user =get_user()
 
-    path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username))+("/obs")
+    path = os.path.join(app.config["OBS_FILES_DIR"]) #+ ("/{}".format(user.username))+("/obs")
 
     # create a directory for user
     if not os.path.exists(path):
@@ -400,11 +400,11 @@ def data_preview():
         user_log.add()
 
         # convert obs file to df
-        path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) + ("/obs")
+        path = os.path.join(app.config["OBS_FILES_DIR"]) #+ ("/{}".format(user.username)) + ("/obs")
         files = [name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))]
 
-        obs_file_1 = path + '/' + files[0]
-        obs_file_2 = path + '/' + files[1]
+        obs_file_1 = path + '/' + 'file1.obs'
+        obs_file_2 = path + '/' + 'file2.obs'
 
         df1 = converttoDF(obs_file_1)
         df2 = converttoDF(obs_file_2)
