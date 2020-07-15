@@ -11,7 +11,7 @@ class Config(object):
     OBS_FILES_DIR = "E:/Google Drive/git/CRHM_Visualisation/data/obs_files"
     CRHM_APP_DIR = "E:/Google Drive/git/CRHM_Visualisation/data/crhm_app"
     FILE_UPLOADS = "E:/Google Drive/git/CRHM_Visualisation/data/users_data"
-    SQLALCHEMY_DATABASE_URI = "sqlite:///E:/Google Drive/git/CRHM_Visualisation/data/crhm.db"
+    SQLALCHEMY_DATABASE_URI = "postgres://postgres:test4Echo@localhost:5432/crhm"
     HTML_FILE_PATH = "E:/Google Drive/git/CRHM_Visualisation/app/templates/public/user_html"
 
 
