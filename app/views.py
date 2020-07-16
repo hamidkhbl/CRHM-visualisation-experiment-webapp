@@ -408,14 +408,14 @@ def data_preview():
 
         df1 = converttoDF(obs_file_1)
         df2 = converttoDF(obs_file_2)
-        df1['SWE(1) 1'] = df1['SWE(1) 1'].astype(float)
-        df1['SWE(2) 1'] = df1['SWE(2) 1'].astype(float)
-        df1['SWE(3) 1'] = df1['SWE(3) 1'].astype(float)
-        df2['SWE(1) 1'] = df2['SWE(1) 1'].astype(float)
-        df2['SWE(2) 1'] = df2['SWE(2) 1'].astype(float)
-        df2['SWE(3) 1'] = df2['SWE(3) 1'].astype(float)
+        df1[df1.columns[1]] = df1[df1.columns[1]].astype(float)
+        df1[df1.columns[2]] = df1[df1.columns[2]].astype(float)
+        df1[df1.columns[3]] = df1[df1.columns[3]].astype(float)
+        df2[df2.columns[1]] = df2[df2.columns[1]].astype(float)
+        df2[df2.columns[2]] = df2[df2.columns[2]].astype(float)
+        df2[df2.columns[3]] = df2[df2.columns[3]].astype(float)
 
-        df1['SWE(1) 1'] = df1['SWE(1) 1'].astype(float)
+        #df1['SWE(1) 1'] = df1['SWE(1) 1'].astype(float)
         #df1_style = df1.style.apply(highlight_diff_2,threshold=0,column_1=df1.columns, column_2=df2.columns, axis=1)
 
         #df1_html = df1_style.render(classes="table table-hover table-striped table-sm table-bordered")
