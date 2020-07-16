@@ -34,10 +34,11 @@
     <p>Save these files in a folder, we will use them in next steps.</p>
 
     <!-- nav card -->
+    <form action="/visualization/download" method="POST">
     <div class="card">
         <div class="row">
             <div class="col-sm-1">
-                <a href="participants_info" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
+                <button class="btn btn-secondary btn-lg active float-right get_input" name="dir" value="back">Back</button>
             </div>
             <div class="col-sm-10">
                 <p class="text-center font-weight-light">4/13</p>
@@ -49,5 +50,6 @@
         </div>
 
     </div>
+</form>
 </div>
 {%endblock%}

@@ -7,6 +7,7 @@ from passlib.hash import sha256_crypt
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from flask_login import UserMixin
+import random
 
 db = SQLAlchemy(app)
 
@@ -31,12 +32,15 @@ class User(db.Model, UserMixin):
     one_sitting = db.Column(db.String(20))
     task1_like = db.Column(db.String(500))
     task2_like = db.Column(db.String(500))
-    degree = db.Column(db.String(30))
+    degree = db.Column(db.String(30), default='0')
+
+    random_state = db.Column(db.String(20), nullable = False)
 
     def __repr__(self):
         return f"user({self.id},{self.username},{self.last_time_loggedin})"
 
     def add(self):
+        self.random_state = random.randint(0, 1)
         self.username = self.username.lower()
         self.password = sha256_crypt.encrypt(self.password)
         db.session.add(self)
