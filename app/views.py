@@ -114,7 +114,7 @@ def participants_info():
         else:
             user.update_userInfo(age, crhm_exp, gender, dev_exp, test_exp, role_exp, degree)
             flash("Information saved successfully","success")
-            return redirect(url_for('users.'+page.page_handler('next',user)))
+            return redirect(url_for(page.page_handler('next',user)))
 
     return render_template("public/participants_info.html", crhm_exp = user.crhm_exp, gender = user.gender, age = user.age, dev_exp = user.dev_exp_years, test_exp = user.test_exp_years, role = user.role_exp if user.role_exp is not None else '', degree = user.degree, page=page.get_page_number(user))
 
