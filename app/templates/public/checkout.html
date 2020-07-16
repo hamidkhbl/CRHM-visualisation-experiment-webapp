@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
     <br>
     <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: 96%" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100"></div>
+        <div class="progress-bar" role="progressbar" aria-valuenow={{page[1]}} style="width: {{page[1]}}%" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100"></div>
       </div>
       <br>
     <h4>Please answer the following questions</h4>
@@ -43,12 +43,12 @@
           </div>
 
           <div class="input-group mb-3">
-            <label class="col-sm-5" for="task1_like">What are the things you liked/disliked in doing Task 1 (CRHM windows application)? </label>
+            <label class="col-sm-5" for="task1_like">What are the things you liked/disliked in doing Task A (CRHM windows application)? </label>
             <input required type="text" rows="5" name="task1_like" id="task1_like" class="form-control col-sm-6" value={{task1_like}}>
           </div>
 
           <div class="input-group mb-3">
-            <label class="col-sm-5" for="task2_like">What are the things you liked/disliked in doing Task 2 (the tabular and plot view)?</label>
+            <label class="col-sm-5" for="task2_like">What are the things you liked/disliked in doing Task B (the tabular and plot view)?</label>
             <input required type="text" rows="5" name="task2_like" id="task2_like" class="form-control col-sm-6" value={{task2_like}}>
           </div>
 
@@ -73,7 +73,7 @@
                 <button class="btn btn-secondary btn-lg active float-right get_input" name="dir" value="back">Back</button>
             </div>
             <div class="col-sm-8">
-                <p class="text-center font-weight-light">12/13</p>
+                <p class="text-center font-weight-light">{{page|first}}</p>
             </div>
             <!-- <div class="col-sm-1">
                 <a href="finish" class="btn btn-success btn-lg active float-right" role="button"

@@ -12,10 +12,10 @@
     <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
     <br>
     <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: 81%" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100"></div>
+        <div class="progress-bar" role="progressbar" style="width: {{page[1]}}%" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100"></div>
       </div>
       <br>
-    <h3>Task 2: See the difference on a plot</h3>
+    <h3>Task B: See the difference on a plot</h3>
     <hr>
     <p>By clicking on the Show Plot button, a line graph of both data files will open in a new tab. You can perform the following actions on the figure from the panel on the page's top-right corner.</p>
     <form target="_blank" action="/visualization/show_plot" method = "POST">
@@ -60,7 +60,7 @@
                 <a href="data_preview" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
             </div>
             <div class="col-sm-10">
-                <p class="text-center font-weight-light">10/13</p>
+                <p class="text-center font-weight-light">{{page[0]}}/13</p>
             </div>
             <div class="col-sm-1">
                 <a href="new_tlx" class="btn btn-success btn-lg active float-right" role="button"

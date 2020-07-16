@@ -10,7 +10,7 @@
 <div class="container">
     <br>
     <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: 1%" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100"></div>
+        <div class="progress-bar" role="progressbar" style="width: {{page[1]}}%" aria-valuenow="10" aria-valuemin="10" aria-valuemax="100"></div>
       </div>
       <br>
 
@@ -28,7 +28,7 @@
 
     </ul>
     <p>After each task we ask questions about the task. Please click on the next button to start.</p>
-    <p><b>Note:</b> To overcome order bias, you will start from task A or B randomly.</p>
+    <p><b>Note:</b> To prevent any order bias, you will be randomly directed to either task A or B.</p>
     <p><b>System requirments:</b> We will first ask you to install a windows based application, so you need to have a <b>Windows operating system</b> with installation permission.</p>
 
 
@@ -39,7 +39,7 @@
                 <a href="download" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
             </div> -->
             <div class="col-sm-10">
-                <p class="text-center font-weight-light">1/13</p>
+                <p class="text-center font-weight-light">{{page[0]}}/13</p>
             </div>
             <div class="col-sm-2">
                 <a href="consent_form" class="btn btn-success btn-lg active float-right" role="button" aria-pressed="true">Next</a>

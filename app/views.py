@@ -35,18 +35,12 @@ def signin():
             user.update_last_time_loggedin(datetime.now().replace(microsecond=0))
 
             login_user(user)
-            next_page = request.args.get('next')
-
-            #session["SECRETKEY"] = user.secret_key
-            #flash("Signed in","success")
 
             # add action to user history
             user_log = UserLog(user.id, "signin", datetime.now().replace(microsecond=0))
             user_log.add()
 
-            #return redirect(next_page) if next_page else redirect(url_for("users.welcome"))
             return redirect(url_for("users.welcome"))
-            #return redirect(url_for(page_handler('next',user)))
         else:
             flash("Wrong credentials","danger")
             return redirect(url_for("users.signin"))
@@ -73,11 +67,12 @@ def welcome():
     #add action to user history
     user_log = UserLog(user.id, "welcome", datetime.now().replace(microsecond=0))
     user_log.add()
+    page = Page()
     if request.method == "POST":
         req = request.form
-        return redirect(url_for(page_handler('next',user)))
+        return redirect(url_for(page.page_handler('next',user)))
 
-    return render_template("public/welcome.html")
+    return render_template("public/welcome.html", page=page.get_page_number(user))
 
 @users.route("/consent_form", methods = ["GET", "POST"])
 @login_required
@@ -87,11 +82,12 @@ def consent_form():
     # add action to user history
     user_log = UserLog(user.id, "consent_form", datetime.now().replace(microsecond=0))
     user_log.add()
+    page = Page()
 
     if request.method == "POST":
-        return redirect(url_for(page_handler('next',user)))
+        return redirect(url_for(page.page_handler('next',user)))
 
-    return render_template("public/consent_form.html")
+    return render_template("public/consent_form.html", page=page.get_page_number(user))
 
 @users.route("/participants_info",methods = ["GET", "POST"])
 @login_required
@@ -101,6 +97,7 @@ def participants_info():
     # add action to user history
     user_log = UserLog(user.id, "participants_info", datetime.now().replace(microsecond=0))
     user_log.add()
+    page=Page()
 
     if request.method == "POST":
         req = request.form
@@ -113,13 +110,13 @@ def participants_info():
         degree = req.get("degree")
 
         if degree == user.degree and age == user.age and crhm_exp == user.crhm_exp and gender == user.gender and dev_exp == user.dev_exp_years and test_exp == user.test_exp_years and role_exp == user.role_exp:
-            return redirect(url_for(page_handler('next',user)))
+            return redirect(url_for(page.page_handler('next',user)))
         else:
             user.update_userInfo(age, crhm_exp, gender, dev_exp, test_exp, role_exp, degree)
             flash("Information saved successfully","success")
-            return redirect(url_for('users.'+page_handler('next',user)))
+            return redirect(url_for('users.'+page.page_handler('next',user)))
 
-    return render_template("public/participants_info.html", crhm_exp = user.crhm_exp, gender = user.gender, age = user.age, dev_exp = user.dev_exp_years, test_exp = user.test_exp_years, role = user.role_exp if user.role_exp is not None else '', degree = user.degree)
+    return render_template("public/participants_info.html", crhm_exp = user.crhm_exp, gender = user.gender, age = user.age, dev_exp = user.dev_exp_years, test_exp = user.test_exp_years, role = user.role_exp if user.role_exp is not None else '', degree = user.degree, page=page.get_page_number(user))
 
 @users.route("/signout")
 @login_required
@@ -176,12 +173,13 @@ def download():
     # add action to user log
     user_log = UserLog(user.id, "download", datetime.now().replace(microsecond=0))
     user_log.add()
+    page = Page()
 
     if request.method == "POST":
-        return redirect(url_for(page_handler('back',user)))
+        return redirect(url_for(page.page_handler('back',user)))
 
 
-    return render_template("public/download.htm")
+    return render_template("public/download.htm", page=page.get_page_number(user))
 
 def allowed_file(file_name):
     if not "." in file_name:
@@ -266,6 +264,7 @@ def upload():
     # add action to user history
     user_log = UserLog(user.id, "upload", datetime.now().replace(microsecond=0))
     user_log.add()
+    page=Page()
 
     try:
         path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) +("/obs")
@@ -276,7 +275,7 @@ def upload():
     # add action to user log
     user_log = UserLog(user.id, "upload", datetime.now().replace(microsecond=0))
     user_log.add()
-    return render_template("public/upload.html", files = files, file_count = len(files))
+    return render_template("public/upload.html", files = files, file_count = len(files), page=page.get_page_number(user))
 
 @users.route("/crhm")
 @login_required
@@ -286,8 +285,9 @@ def crhm():
     # add action to user log
     user_log = UserLog(user.id, "crhm", datetime.now().replace(microsecond=0))
     user_log.add()
+    page = Page()
 
-    return render_template("public/crhm.html")
+    return render_template("public/crhm.html", page=page.get_page_number(user))
 
 @users.route("/crhm_guid")
 @login_required
@@ -297,8 +297,9 @@ def crhm_guid():
     # add action to user log
     user_log = UserLog(user.id, "crhm_guid", datetime.now().replace(microsecond=0))
     user_log.add()
+    page = Page()
 
-    return render_template("public/crhm_guid.html")
+    return render_template("public/crhm_guid.html", page=page.get_page_number(user))
 
 @users.route("/crhm_tlx",methods = ["GET", "POST"])
 def crhm_tlx():
@@ -307,6 +308,7 @@ def crhm_tlx():
     # add action to user history
     user_log = UserLog(user.id, "crhm.tlx", datetime.now().replace(microsecond=0))
     user_log.add()
+    page = Page()
 
     tlx = NasaTLX.get_user_tlx(userId = user.id, page = 'crhm')
 
@@ -335,9 +337,9 @@ def crhm_tlx():
         else:
             tlx.update_user_tlx(req.get("mental_demanding"), req.get("physically_demanding"), req.get("hurried_rushed"), req.get("successful_accomplishing"), req.get("hard_performance"), req.get("insecure_discouraged"), req.get("crhm_time"), req.get("crhm_mismatch"))
 
-        return redirect(url_for(page_handler('next',user)))
+        return redirect(url_for(page.page_handler('next',user)))
 
-    return render_template("public/crhm_tlx.html", answers = answers, questions = questions, time = tlx.time if tlx is not None else '', mismatch = tlx.mismatch if tlx is not None else '')
+    return render_template("public/crhm_tlx.html", answers = answers, questions = questions, time = tlx.time if tlx is not None else '', mismatch = tlx.mismatch if tlx is not None else '', page=page.get_page_number(user))
 
 @users.route("/new_intro",methods = ["GET", "POST"])
 @login_required
@@ -347,10 +349,11 @@ def new_intro():
     # add action to user history
     user_log = UserLog(user.id, "new_intro", datetime.now().replace(microsecond=0))
     user_log.add()
+    page = Page()
     if request.method == "POST":
-        return redirect(url_for(page_handler('back',user)))
+        return redirect(url_for(page.page_handler('back',user)))
 
-    return render_template("public/new_intro.html")
+    return render_template("public/new_intro.html", page=page.get_page_number(user))
 
 @users.route("/new_tlx",methods = ["GET", "POST"])
 def new_tlx():
@@ -359,6 +362,7 @@ def new_tlx():
     # add action to user history
     user_log = UserLog(user.id, "new_txl", datetime.now().replace(microsecond=0))
     user_log.add()
+    page=Page()
 
     tlx = NasaTLX.get_user_tlx(userId = user.id, page = 'new')
 
@@ -387,9 +391,9 @@ def new_tlx():
         else:
             tlx.update_user_tlx(req.get("mental_demanding"), req.get("physically_demanding"), req.get("hurried_rushed"), req.get("successful_accomplishing"), req.get("hard_performance"), req.get("insecure_discouraged"), req.get("new_time"), req.get("new_mismatch"))
 
-        return redirect(url_for(page_handler('next',user)))
+        return redirect(url_for(page.page_handler('next',user)))
 
-    return render_template("public/new_tlx.html", answers = answers, questions = questions, time = tlx.time if tlx is not None else '', mismatch = tlx.mismatch if tlx is not None else '')
+    return render_template("public/new_tlx.html", answers = answers, questions = questions, time = tlx.time if tlx is not None else '', mismatch = tlx.mismatch if tlx is not None else '', page=page.get_page_number(user))
 
 def highlight_diff(s,threshold,column):
     is_max = pd.Series(data=False, index=s.index)
@@ -401,6 +405,7 @@ def highlight_diff(s,threshold,column):
 @login_required
 def data_preview():
     user = get_user()
+    page = Page()
 
     data_type = ""
     df3_html = ""
@@ -444,13 +449,14 @@ def data_preview():
         #df4 = df1.merge(df2, how ='outer', left_index=True, right_index=True)
         #df4_html = df4.to_html(classes="table table-hover table-striped table-sm table-bordered")
 
-    return render_template("public/data_preview.html", data_type = data_type, df3 = df3_html)
+    return render_template("public/data_preview.html", data_type = data_type, df3 = df3_html, page=page.get_page_number(user))
 
 
 @users.route("/data_preview_expanded", methods = ["GET", "POST"])
 @login_required
 def data_preview_expanded():
     user = get_user()
+    page = Page()
 
     data_type = ""
     df1_html = ""
@@ -483,7 +489,7 @@ def data_preview_expanded():
         df4 = df1.merge(df2, how ='outer', left_index=True, right_index=True)
         df4_html = df4.to_html(classes="table table-hover table-striped table-sm table-bordered")
 
-    return render_template("public/data_preview_expanded.html", data_type = data_type, df1 = df1_html, df2 = df2_html, df3 = df3_html, df4 = df4_html)
+    return render_template("public/data_preview_expanded.html", data_type = data_type, df1 = df1_html, df2 = df2_html, df3 = df3_html, df4 = df4_html, page=page.get_page_number(user))
 
 @users.route("/show_plot", methods = ["GET", "POST"])
 @login_required
@@ -520,8 +526,9 @@ def plot():
     # add action to user log
     user_log = UserLog(user.id, "plot", datetime.now().replace(microsecond=0))
     user_log.add()
+    page=Page()
 
-    return render_template("public/plot.html")
+    return render_template("public/plot.html", page=page.get_page_number(user))
 
 @users.route("/questions")
 @login_required
@@ -538,6 +545,7 @@ def questions():
 @login_required
 def checkout():
     user = get_user()
+    page = Page()
 
     if request.method == "POST":
         req = request.form
@@ -552,15 +560,15 @@ def checkout():
             flash("Email saved successfully","success")
 
         if request.form['dir'] == 'back':
-            return redirect(url_for(page_handler('back',user)))
+            return redirect(url_for(page.page_handler('back',user)))
         else:
-            return redirect(url_for(page_handler('next',user)))
+            return redirect(url_for(page.page_handler('next',user)))
 
     # add action to user log
     user_log = UserLog(user.id, "checkout", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    return render_template("public/checkout.html", email = user.email if user.email is not None else '', one_sitting = user.one_sitting, task1_like = user.task1_like if user.task1_like is not None else '', task2_like = user.task2_like if user.task2_like is not None else '')
+    return render_template("public/checkout.html", email = user.email if user.email is not None else '', one_sitting = user.one_sitting, task1_like = user.task1_like if user.task1_like is not None else '', task2_like = user.task2_like if user.task2_like is not None else '', page=page.get_page_number(user))
 
 @users.route("/finish")
 @login_required
@@ -570,8 +578,9 @@ def finish():
     # add action to user log
     user_log = UserLog(user.id, "finish", datetime.now().replace(microsecond=0))
     user_log.add()
+    page = Page()
 
-    return render_template("public/finish.html")
+    return render_template("public/finish.html", page=page.get_page_number(user))
 
 @users.route("/update_password",methods = ["GET", "POST"])
 @login_required
@@ -595,54 +604,65 @@ def update_password():
 
     return render_template("public/profile.html")
 
-def page_handler(direction,user):
-    current_page = os.path.basename(request.path)
 
-    page_dict_0 = {'signin':'welcome',
-                    'welcome':'consent_form',
-                    'consent_form':'participants_info',
-                    'participants_info':'download',
-                    'download':'crhm',
-                    'crhm':'crhm_guid',
-                    'crhm_guid':'crhm_tlx',
-                    'crhm_tlx':'new_intro',
-                    'new_intro':'data_preview',
-                    'data_preview':'plot',
-                    'plot':'new_tlx',
-                    'new_tlx':'checkout',
-                    'checkout':'finish',
-                    'finish':'signout'}
+class Page():
+    page_dict_0 = {'signin':['welcome',0,0],
+                        'welcome':['consent_form',1,2],
+                        'consent_form':['participants_info',2,9],
+                        'participants_info':['download',3,18],
+                        'download':['crhm',4,30],
+                        'crhm':['crhm_guid',5,39.5],
+                        'crhm_guid':['crhm_tlx',6,47],
+                        'crhm_tlx':['new_intro',7,54.5],
+                        'new_intro':['data_preview',8,62],
+                        'data_preview':['plot',9,69.5],
+                        'plot':['new_tlx',10,77],
+                        'new_tlx':['checkout',11,84.5],
+                        'checkout':['finish',12,92],
+                        'finish':['signout',13,100]}
 
 
-    page_dict_1 = {'signin':'welcome',
-                    'welcome':'consent_form',
-                    'consent_form':'participants_info',
-                    'participants_info':'new_intro',
-                    'new_intro':'data_preview',
-                    'data_preview':'plot',
-                    'plot':'new_tlx',
-                    'new_tlx':'download',
-                    'download':'crhm',
-                    'crhm':'crhm_guid',
-                    'crhm_guid':'crhm_tlx',
-                    'crhm_tlx':'checkout',
-                    'checkout':'finish',
-                    'finish':'signout'}
-    def get_key(val, my_dict):
-        for key, value in my_dict.items():
-            if val == value:
-                return key
-    next_page = ''
-    pre_page = ''
+    page_dict_1 = {'signin':['welcome',0,0],
+                        'welcome':['consent_form',1,2],
+                        'consent_form':['participants_info',2,9],
+                        'participants_info':['new_intro',3,18],
+                        'new_intro':['data_preview',4,30],
+                        'data_preview':['plot',5,39.5],
+                        'plot':['new_tlx',6,47],
+                        'new_tlx':['download',7,54.5],
+                        'download':['crhm',8,62],
+                        'crhm':['crhm_guid',9,70.5],
+                        'crhm_guid':['crhm_tlx',10,77],
+                        'crhm_tlx':['checkout',11,84.5],
+                        'checkout':['finish',12,92],
+                        'finish':['signout',13,100]}
+    def get_page_number(self, user):
+        if user.random_state == '0':
+            current_page = os.path.basename(request.path)
+            return self.page_dict_0.get(current_page)[1:]
+        else:
+            current_page = os.path.basename(request.path)
+            return self.page_dict_1.get(current_page)[1:]
 
-    if user.random_state == '0':
-        next_page = page_dict_0.get(current_page)
-        pre_page = get_key(current_page, page_dict_0)
-    else:
-        next_page = page_dict_1.get(current_page)
-        pre_page = get_key(current_page, page_dict_1)
 
-    if direction == 'next':
-        return 'users.'+next_page
-    else:
-        return 'users.'+pre_page
+    def page_handler(self,direction,user):
+        current_page = os.path.basename(request.path)
+
+        def get_key(val, my_dict):
+            for key, value in my_dict.items():
+                if val == value[0]:
+                    return key
+        next_page = ''
+        pre_page = ''
+
+        if user.random_state == '0':
+            next_page = self.page_dict_0.get(current_page)[0]
+            pre_page = get_key(current_page, self.page_dict_0)
+        else:
+            next_page = self.page_dict_1.get(current_page)[0]
+            pre_page = get_key(current_page, self.page_dict_1)
+
+        if direction == 'next':
+            return 'users.'+next_page
+        else:
+            return 'users.'+pre_page
