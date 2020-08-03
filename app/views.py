@@ -27,20 +27,27 @@ def signin():
 
         user = User()
 
+
         if user.check_password(username, password):
             user = User()
             user = user.get_user(username)
 
-            # update last time logged in
-            user.update_last_time_loggedin(datetime.now().replace(microsecond=0))
+            if user.check_active(username):
 
-            login_user(user)
+                # update last time logged in
+                user.update_last_time_loggedin(datetime.now().replace(microsecond=0))
 
-            # add action to user history
-            user_log = UserLog(user.id, "signin", datetime.now().replace(microsecond=0))
-            user_log.add()
+                login_user(user)
 
-            return redirect(url_for("users.welcome"))
+                # add action to user history
+                user_log = UserLog(user.id, "signin", datetime.now().replace(microsecond=0))
+                user_log.add()
+
+                return redirect(url_for("users.welcome"))
+            else:
+                flash("Your user has been deactivated.","danger")
+                return redirect(url_for("users.signin"))
+
         else:
             flash("Wrong credentials","danger")
             return redirect(url_for("users.signin"))

@@ -35,6 +35,7 @@ class User(db.Model, UserMixin):
     degree = db.Column(db.String(30), default='0')
 
     random_state = db.Column(db.String(20), nullable = False)
+    active = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
         return f"user({self.id},{self.username},{self.last_time_loggedin})"
@@ -67,6 +68,14 @@ class User(db.Model, UserMixin):
             return True
         else:
             return False
+
+    def check_active(self, username):
+        try:
+            result = User.query.filter_by(username = username).first().active
+        except:
+            return False
+        return result
+
 
     def get_user(self, username):
         return User.query.filter_by(username = username).first()
