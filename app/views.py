@@ -22,7 +22,7 @@ def signin():
 
     if request.method == "POST":
         req = request.form
-        username = req.get("username")
+        username = req.get("username").lower()
         password = req.get("password")
 
         user = User()
@@ -643,13 +643,29 @@ class Page():
                         'crhm_tlx':['checkout',11,84.5],
                         'checkout':['finish',12,92],
                         'finish':['signout',13,100]}
+
+    page_dict_webvis = {'signin':['welcome',0,0],
+                        'welcome':['consent_form',1,2],
+                        'consent_form':['participants_info',2,9],
+                        'participants_info':['new_intro',3,18],
+                        'new_intro':['data_preview',4,30],
+                        'data_preview':['plot',5,39.5],
+                        'plot':['new_tlx',6,47],
+                        'new_tlx':['checkout',7,54.5],
+                        'checkout':['finish',12,92],
+                        'finish':['signout',13,100]}
+
     def get_page_number(self, user):
         if user.random_state == '0':
             current_page = os.path.basename(request.path)
             return self.page_dict_0.get(current_page)[1:]
-        else:
+        elif user.random_state == '1':
             current_page = os.path.basename(request.path)
             return self.page_dict_1.get(current_page)[1:]
+        else:
+            current_page = os.path.basename(request.path)
+            return self.page_dict_webvis.get(current_page)[1:]
+
 
 
     def page_handler(self,direction,user):
