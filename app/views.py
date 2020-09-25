@@ -43,7 +43,7 @@ def signin():
                 user_log = UserLog(user.id, "signin", datetime.now().replace(microsecond=0))
                 user_log.add()
 
-                return redirect(url_for("users.welcome"))
+                return redirect(url_for("users.dashboard"))
             else:
                 flash("Your user has been deactivated.","danger")
                 return redirect(url_for("users.signin"))
@@ -61,13 +61,37 @@ def get_user():
         print('*****************', os.path.basename(request.path))
         return user
     else:
+        print('*****************', os.path.basename(request.path))
         return None
 
 
+@users.route("/dashboard", methods = ["GET", "POST"])
+@login_required
+def dashboard():
+    user = get_user()
 
+    # add action to user history
+    user_log = UserLog(user.id, "dashboard", datetime.now().replace(microsecond=0))
+    user_log.add()
+
+    try:
+        path = os.path.join(app.config["FILE_UPLOADS"]) + ("/{}".format(user.username)) +("/obs")
+        files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+    except:
+        files = []
+
+    return render_template("public/dashboard.html", files = files, file_count = len(files))
+
+@app.route('/delete_file/<file_name>', methods=['GET', 'POST'])
+@login_required
+def delete_file(file_name):
+    user = get_user()
+    os.remove(app.config["FILE_UPLOADS"] + ("/{}".format(user.username)) +("/obs/"+file_name))
+    flash("File deleted.","danger")
+    return redirect(url_for('users.dashboard'))
 
 @users.route("/welcome", methods = ["GET", "POST"])
-@login_required
+#@login_required
 def welcome():
     user = get_user()
 
@@ -213,27 +237,37 @@ def upload_obs():
         os.makedirs(path)
 
     if request.method == "POST":
+
+
         if request.files:
             obs = request.files["obs"]
             if obs.filename =="":
                 flash("Select a file","danger")
-                return redirect(url_for("users.upload"))
+                return redirect(url_for("users.dashboard"))
 
             if not allowed_file(obs.filename):
                 flash("File extention not allowed","danger")
-                return redirect(url_for("users.upload"))
+                return redirect(url_for("users.dashboard"))
             else:
-                filename = secure_filename(obs.filename)
-                obs.save(os.path.join(path, filename))
-                flash("File uploaded", "success")
-                return redirect(url_for("users.upload"))
+                path = os.path.join(app.config["OBS_FILES_DIR"]) + ("/{}".format(user.username))+("/obs")
+                number_of_files = len([name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))])
+                if number_of_files < 2:
+                    filesize = request.cookies.get("filesize")
+                    filename = secure_filename(obs.filename)
+                    obs.save(os.path.join(path, filename))
+                    flash("File uploaded", "success")
+                    return redirect(url_for("users.dashboard"))
+                else:
+                    flash("Too many files!","danger")
+                    return redirect(url_for("users.dashboard"))
+
 
 @users.route("/check_files", methods = ["GET","POST"])
 @login_required
 def check_files():
     user =get_user()
 
-    path = os.path.join(app.config["OBS_FILES_DIR"]) #+ ("/{}".format(user.username))+("/obs")
+    path = os.path.join(app.config["OBS_FILES_DIR"]) + ("/{}".format(user.username))+("/obs")
 
     # create a directory for user
     if not os.path.exists(path):
@@ -282,7 +316,7 @@ def upload():
     # add action to user log
     user_log = UserLog(user.id, "upload", datetime.now().replace(microsecond=0))
     user_log.add()
-    return render_template("public/upload.html", files = files, file_count = len(files), page=page.get_page_number(user))
+    return render_template("public/upload.html", files = files, file_count = len(files))
 
 @users.route("/crhm")
 @login_required
@@ -507,21 +541,24 @@ def show_plot():
     user_log = UserLog(user.id, "show_plot", datetime.now().replace(microsecond=0))
     user_log.add()
 
-    path = os.path.join(app.config["OBS_FILES_DIR"]) #+ ("/{}".format(user.username)) + ("/obs")
+    path = os.path.join(app.config["OBS_FILES_DIR"]) + ("/{}".format(user.username)) + ("/obs")
     html_path = os.path.join(app.config["HTML_FILE_PATH"]) + ("/{}".format(user.username))
     if not os.path.exists(html_path):
         os.makedirs(html_path)
     files = [name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))]
 
-    obs_file_1 = path + '/' + 'file1.obs'
-    obs_file_2 = path + '/' + 'file2.obs'
+    if len(files) ==1:
+        obs_file_1 = path + '/' + files[0]
+        df1 = converttoDF(obs_file_1)
+        plot_go(df1,os.path.basename(obs_file_1), html_path)
 
-
-    df1 = converttoDF(obs_file_1)
-    df2 = converttoDF(obs_file_2)
-    df3 = df1.merge(df2, on = 'time', how ='outer')
-
-    plot_go(df3,'Data from both files are plotted here', html_path)
+    elif len(files) == 2:
+        obs_file_1 = path + '/' + files[0]
+        obs_file_2 = path + '/' + files[1]
+        df1 = converttoDF(obs_file_1)
+        df2 = converttoDF(obs_file_2)
+        df3 = df1.merge(df2, on = 'time', how ='outer')
+        plot_go(df3, os.path.basename(obs_file_1) +' and ' + os.path.basename(obs_file_2), html_path)
 
     return render_template('public/user_html/'+user.username+'/temp-plot.html')
 
@@ -644,16 +681,7 @@ class Page():
                         'checkout':['finish',12,92],
                         'finish':['signout',13,100]}
 
-    page_dict_webvis = {'signin':['welcome',0,0],
-                        'welcome':['consent_form',1,2],
-                        'consent_form':['participants_info',2,9],
-                        'participants_info':['new_intro',3,18],
-                        'new_intro':['data_preview',4,30],
-                        'data_preview':['plot',5,39.5],
-                        'plot':['new_tlx',6,47],
-                        'new_tlx':['checkout',7,54.5],
-                        'checkout':['finish',12,92],
-                        'finish':['signout',13,100]}
+    page_dict_webvis = {'signin':['dashboard',0,0]}
 
     def get_page_number(self, user):
         if user.random_state == '0':
@@ -689,3 +717,5 @@ class Page():
             return 'users.'+next_page
         else:
             return 'users.'+pre_page
+
+

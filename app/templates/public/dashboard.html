@@ -1,0 +1,122 @@
+{% extends "public/templates/public_template.html"%}
+
+{% block title%}Upload{% endblock %}
+
+{% block profile%}
+{{current_user.username}}
+{% endblock%}
+
+{% block main%}
+<div class="container">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
+    <br>
+      <br>
+    <h1>Upload files</h1>
+    <hr>
+    <p>Upload up to two files (If you upload two files, data will be joined based on time)</p>
+    <br>
+    <div class="row">
+        <div class="column col-6">
+
+            <form action="/visualization/upload_obs" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label></label>
+                    <div class="custom-file col-sm-8">
+                        <input oninput="filesize(this)" type="file" class="custom-file-input" name="obs" id="obs">
+                        <label class="custom-file-label" for="obs">Select the first file...</label>
+                    </div>
+                </div>
+                <button class="btn"><i class="fa fa-upload"></i> Upload</button>
+            </form>
+
+
+            <p></p>
+
+        </div>
+
+        <!--
+
+                    <div class="column col-6">
+            <form action="/visualization/upload_obs" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label></label>
+                    <div class="custom-file col-sm-8">
+                        <input oninput="filesize(this)" type="file" class="custom-file-input" name="obs" id="obs">
+                        <label class="custom-file-label" for="obs">Select the second file...</label>
+                    </div>
+                </div>
+                <button class="btn"><i class="fa fa-upload"></i> Upload</button>
+            </form>
+        </div>
+
+        -->
+    </div>
+    <div class="row">
+        <div class="card" style="width: 30rem;">
+            <div class="card-body">
+                <h4>Uploaded files:</h4>
+                <br>
+            <ul>
+
+                {% if file_count == 0%}
+                <p>Nothing uploaded yet!</p>
+                {% endif %}
+
+                {% for f in files %}
+                    <li style="color:green; border: 1px solid #ddd; margin-top: -1px; background-color: #f6f6f6; padding: 12px;
+                    text-decoration: none;
+                    font-size: 18px;
+                    color: black;
+                    display: block;
+                    position: relative;">
+                        {{f}}<span class="close" style="color:red;   cursor: pointer;
+                        position: absolute;
+                        top: 50%;
+                        right: 0%;
+                        padding: 12px 16px;
+                        transform: translate(0%, -50%); ">  <a href="/delete_file/{{f}}" style="color:red; text-decoration : none">X</a></span>
+                    </li>
+
+
+
+                {% endfor %}
+
+
+            </ul>
+            </div>
+        </div>
+
+    </div>
+    <hr>
+    <form target="_blank" action="/visualization/show_plot" method = "POST">
+        <button class="btn btn-primary">Open Plot</button>
+    </form>
+
+
+    <!-- nav card
+            <div class="card">
+        <div class="row">
+            <div class="col-sm-1">
+                <a href="new_intro" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Back</a>
+            </div>
+            <div class="col-sm-10">
+            </div>
+            <div class="col-sm-1">
+
+                <form action="/visualization/check_files" method="POST" enctype="multipart/form-data">
+                    <button class="btn btn-success btn-lg active float-right"> Next</button>
+                </form>
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+    -->
+
+</div>
+{%endblock%}
+
