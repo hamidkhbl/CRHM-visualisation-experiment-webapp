@@ -82,12 +82,12 @@ def dashboard():
 
     return render_template("public/dashboard.html", files = files, file_count = len(files))
 
-@users.route('/delete_file/<file_name>', methods=['GET', 'POST'])
+@users.route("/delete_file/<file_name>", methods=['GET', 'POST'])
 @login_required
 def delete_file(file_name):
     user = get_user()
     os.remove(app.config["FILE_UPLOADS"] + ("/{}".format(user.username)) +("/obs/"+file_name))
-    flash("File deleted.","danger")
+    flash("File deleted.","primary")
     return redirect(url_for('users.dashboard'))
 
 @users.route("/welcome", methods = ["GET", "POST"])
