@@ -82,7 +82,7 @@ def dashboard():
 
     return render_template("public/dashboard.html", files = files, file_count = len(files))
 
-@app.route('/delete_file/<file_name>', methods=['GET', 'POST'])
+@users.route('/delete_file/<file_name>', methods=['GET', 'POST'])
 @login_required
 def delete_file(file_name):
     user = get_user()
@@ -250,14 +250,16 @@ def upload_obs():
             else:
                 path = os.path.join(app.config["OBS_FILES_DIR"]) + ("/{}".format(user.username))+("/obs")
                 number_of_files = len([name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))])
-                if number_of_files < 2:
+                if number_of_files >= 2:
+                    flash("Too many files!","danger")
+                    return redirect(url_for("users.dashboard"))
+                else:
                     filename = secure_filename(obs.filename)
                     obs.save(os.path.join(path, filename))
                     flash("File uploaded", "success")
                     return redirect(url_for("users.dashboard"))
-                else:
-                    flash("Too many files!","danger")
-                    return redirect(url_for("users.dashboard"))
+
+
 
 
 @users.route("/check_files", methods = ["GET","POST"])
