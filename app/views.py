@@ -226,6 +226,7 @@ def allowed_file(file_name):
 def upload_obs():
     user =get_user()
 
+
     # add action to user history
     user_log = UserLog(user.id, "upload_obs", datetime.now().replace(microsecond=0))
     user_log.add()
@@ -237,10 +238,8 @@ def upload_obs():
         os.makedirs(path)
 
     if request.method == "POST":
-
-
         if request.files:
-            obs = request.files["obs"]
+            obs = request.files["obs_input"]
             if obs.filename =="":
                 flash("Select a file","danger")
                 return redirect(url_for("users.dashboard"))
@@ -252,7 +251,6 @@ def upload_obs():
                 path = os.path.join(app.config["OBS_FILES_DIR"]) + ("/{}".format(user.username))+("/obs")
                 number_of_files = len([name for name in os.listdir(path) if os.path.isfile(os.path.join(path, name))])
                 if number_of_files < 2:
-                    filesize = request.cookies.get("filesize")
                     filename = secure_filename(obs.filename)
                     obs.save(os.path.join(path, filename))
                     flash("File uploaded", "success")
