@@ -82,7 +82,7 @@ def dashboard():
 
     return render_template("public/dashboard.html", files = files, file_count = len(files))
 
-@users.route("/delete_file/<file_name>", methods=['GET', 'POST'])
+@users.route('/delete_file/<file_name>', methods=['GET', 'POST'])
 @login_required
 def delete_file(file_name):
     user = get_user()
